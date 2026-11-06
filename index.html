@@ -662,6 +662,30 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
                     else if (logged) { setNbaAdminStatus('Sesión autorizada: ' + NBA_ADMIN_EMAIL); fillNbaAdminTeamSelects(); populateNbaAdminForms(); }
                     else setNbaAdminStatus('Acceso exclusivo del administrador.');
                 }
+                const NBA_FEATURED_DRAFT_KEY = 'nba_featured_match_draft_v1';
+                function getNbaFeaturedDraft() {
+                    try { return JSON.parse(localStorage.getItem(NBA_FEATURED_DRAFT_KEY) || 'null'); }
+                    catch (_) { return null; }
+                }
+                function saveNbaFeaturedDraft() {
+                    const draft = {};
+                    ['Home','Away','HomeLogo','AwayLogo','Date','Desc'].forEach(key => {
+                        const el = document.getElementById('nbaF1' + key);
+                        if (el) draft[key] = el.value;
+                    });
+                    try { localStorage.setItem(NBA_FEATURED_DRAFT_KEY, JSON.stringify(draft)); } catch (_) {}
+                }
+                function restoreNbaFeaturedDraft() {
+                    const draft = getNbaFeaturedDraft();
+                    if (!draft) return;
+                    Object.entries(draft).forEach(([key,value]) => {
+                        const el = document.getElementById('nbaF1' + key);
+                        if (el && typeof value === 'string') el.value = value;
+                    });
+                }
+                function clearNbaFeaturedDraft() {
+                    try { localStorage.removeItem(NBA_FEATURED_DRAFT_KEY); } catch (_) {}
+                }
                 function populateNbaAdminForms() {
                     [1].forEach(slot => {
                         const row = nbaFeaturedRows.find(item => Number(item.slot) === slot);
@@ -669,6 +693,8 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
                         const values = {Home:row?.home_team || '', Away:row?.away_team || '', HomeLogo:row?.home_logo_url || '', AwayLogo:row?.away_logo_url || '', Date:localDateValue, Desc:row?.description || ''};
                         Object.entries(values).forEach(([key,value]) => { const el=document.getElementById(`nbaF${slot}${key}`); if(el) el.value=value; });
                     });
+                    // Si existe un borrador, tiene prioridad sobre los datos publicados.
+                    restoreNbaFeaturedDraft();
                 }
                 async function saveNbaFeatured(slot) {
                     const get = suffix => document.getElementById(`nbaF${slot}${suffix}`).value.trim();
@@ -678,13 +704,16 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
                     const payload={slot,home_team:home,away_team:away,home_logo_url:homeLogo||null,away_logo_url:awayLogo||null,match_datetime:new Date(date).toISOString(),description:desc||null};
                     const {error}=await supabaseClient.from(NBA_FEATURED_TABLE).upsert(payload,{onConflict:'slot'});
                     if(error){alert('No se pudo publicar: '+error.message);return;}
-                    await loadNbaFeatured(); setNbaAdminStatus('Partido destacado '+slot+' publicado correctamente.');
+                    await loadNbaFeatured();
+                    clearNbaFeaturedDraft();
+                    populateNbaAdminForms();
+                    setNbaAdminStatus('Partido destacado '+slot+' publicado correctamente.');
                 }
                 async function deleteNbaFeatured(slot) {
                     if(!confirm('¿Quitar el partido destacado '+slot+'?')) return;
                     const {error}=await supabaseClient.from(NBA_FEATURED_TABLE).delete().eq('slot',slot);
                     if(error){alert('No se pudo quitar: '+error.message);return;}
-                    await loadNbaFeatured(); populateNbaAdminForms(); setNbaAdminStatus('Partido destacado '+slot+' eliminado.');
+                    await loadNbaFeatured(); clearNbaFeaturedDraft(); populateNbaAdminForms(); setNbaAdminStatus('Partido destacado '+slot+' eliminado.');
                 }
                 function initNbaFeaturedAdmin() {
                     const open=document.getElementById('nbaAdminSecretTrigger');
@@ -702,6 +731,17 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
                         setNbaAdminStatus('Enlace enviado a '+NBA_ADMIN_EMAIL+'. Abre tu correo en este dispositivo para iniciar sesión.');
                     });
                     document.getElementById('nbaAdminLogout').addEventListener('click',async()=>{await supabaseClient.auth.signOut();showNbaAdmin(null);});
+                    // Guardado automático del borrador al escribir, cambiar de campo o salir de la pestaña.
+                    ['Home','Away','HomeLogo','AwayLogo','Date','Desc'].forEach(key => {
+                        const el = document.getElementById('nbaF1' + key);
+                        if (!el) return;
+                        el.addEventListener('input', saveNbaFeaturedDraft);
+                        el.addEventListener('change', saveNbaFeaturedDraft);
+                    });
+                    document.addEventListener('visibilitychange', () => {
+                        if (document.visibilityState === 'hidden') saveNbaFeaturedDraft();
+                    });
+                    window.addEventListener('pagehide', saveNbaFeaturedDraft);
                     document.querySelectorAll('[data-save-slot]').forEach(btn=>btn.addEventListener('click',()=>saveNbaFeatured(Number(btn.dataset.saveSlot))));
                     document.querySelectorAll('[data-delete-slot]').forEach(btn=>btn.addEventListener('click',()=>deleteNbaFeatured(Number(btn.dataset.deleteSlot))));
                     supabaseClient.auth.onAuthStateChange((_event,session)=>{ if(!document.getElementById('nbaAdminPanel').classList.contains('hidden')) showNbaAdmin(session); });
