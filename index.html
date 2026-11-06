@@ -281,6 +281,184 @@ canvas{filter:saturate(.82)}
 }
 </style>
 
+
+<style id="nba-arena-signature">
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap');
+:root{
+ --arena:#080d13;--arena2:#101923;--panel:#111c27;--panel2:#172431;
+ --silver:#e8edf1;--muted:#91a0ac;--copper:#d9945b;--copper2:#f1bd83;
+ --ice:#8da8bb;--line:rgba(205,220,230,.13);
+}
+*{box-sizing:border-box}
+html,body{background:#080d13!important;color:var(--silver)!important;font-family:Manrope,Arial,sans-serif!important}
+body{
+ background:
+ radial-gradient(ellipse at 50% -15%,rgba(91,122,145,.24),transparent 44rem),
+ radial-gradient(ellipse at 95% 40%,rgba(183,112,58,.12),transparent 32rem),
+ linear-gradient(180deg,#0b121a 0%,#080d13 75%,#0d151e 100%)!important;
+ overflow-x:hidden;
+}
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.13;
+ background:
+  linear-gradient(90deg,transparent calc(50% - .5px),rgba(180,199,211,.25) 50%,transparent calc(50% + .5px)),
+  radial-gradient(ellipse at 50% 52%,transparent 0 19%,rgba(180,199,211,.28) 19.1% 19.25%,transparent 19.4%),
+  linear-gradient(0deg,transparent 49.8%,rgba(180,199,211,.15) 50%,transparent 50.2%);
+}
+body:after{
+ content:"";position:fixed;right:-130px;bottom:-160px;width:390px;height:390px;border-radius:50%;
+ border:1px solid rgba(217,148,91,.09);box-shadow:0 0 0 28px rgba(217,148,91,.018),0 0 0 58px rgba(217,148,91,.014);
+ pointer-events:none;z-index:0;
+}
+body>*{position:relative;z-index:1}
+h1,h2,h3,h4,.font-extrabold,.font-bold{font-family:Barlow Condensed,Manrope,sans-serif!important;letter-spacing:.025em}
+header{
+ min-height:88px!important;background:linear-gradient(100deg,rgba(8,14,21,.97),rgba(18,29,40,.94) 55%,rgba(9,15,22,.97))!important;
+ border-bottom:1px solid rgba(218,230,238,.14)!important;
+ box-shadow:0 14px 42px rgba(0,0,0,.38),inset 0 -1px rgba(255,255,255,.04)!important;
+ backdrop-filter:blur(18px)!important;overflow:hidden;
+}
+header:after{
+ content:"";position:absolute;right:7%;top:-75px;width:230px;height:230px;border-radius:50%;
+ border:1px solid rgba(217,148,91,.13);box-shadow:0 0 0 17px rgba(217,148,91,.025),0 0 0 38px rgba(217,148,91,.018);
+ pointer-events:none;
+}
+header>div{position:relative;z-index:1;max-width:1320px!important;padding-top:17px!important;padding-bottom:17px!important}
+header .bg-gradient-to-tr{
+ background:linear-gradient(145deg,#f0c18d,#a96538)!important;color:#15191d!important;
+ border:1px solid rgba(255,232,204,.42)!important;border-radius:15px!important;
+ box-shadow:0 8px 25px rgba(194,119,66,.24),inset 0 1px 0 rgba(255,255,255,.5)!important;
+}
+header .fa-basketball{font-size:23px!important}
+header h1{font-size:clamp(27px,3vw,36px)!important;font-weight:900!important;letter-spacing:.055em!important;color:#f3f5f7!important;text-shadow:0 3px 20px rgba(0,0,0,.5)}
+header h1 span:not(#nbaAdminSecretTrigger){color:#e8b17c!important;background:rgba(217,148,91,.10)!important;border-color:rgba(217,148,91,.28)!important}
+header p{color:#9eacb7!important;font-size:10px!important;letter-spacing:.17em!important;text-transform:uppercase}
+#nbaFeaturedSection{
+ max-width:1320px!important;margin-top:19px!important;
+}
+#nbaFeaturedSection>div{
+ padding:16px 20px 17px!important;border-radius:18px!important;
+ border:1px solid rgba(197,215,226,.16)!important;
+ background:
+  linear-gradient(110deg,rgba(217,148,91,.10),transparent 30%,transparent 70%,rgba(116,148,169,.08)),
+  linear-gradient(145deg,rgba(23,36,48,.98),rgba(10,18,26,.99))!important;
+ box-shadow:0 20px 55px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.065)!important;
+ position:relative;overflow:hidden;
+}
+#nbaFeaturedSection>div:before{
+ content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+ background:linear-gradient(180deg,#f2c18e,#a95f35 55%,#6d8292);
+ box-shadow:0 0 18px rgba(217,148,91,.35);
+}
+#nbaFeaturedSection>div:after{
+ content:"";position:absolute;right:30px;top:-105px;width:250px;height:250px;border-radius:50%;
+ border:1px solid rgba(217,148,91,.16);box-shadow:0 0 0 18px rgba(217,148,91,.025),0 0 0 42px rgba(217,148,91,.018);
+ pointer-events:none;
+}
+#nbaFeaturedSection>div>*{position:relative;z-index:1}
+#nbaFeaturedSection>div>div:first-child{margin-bottom:11px!important}
+#nbaFeaturedSection p:first-child{color:#e9ad75!important;font-size:9px!important;letter-spacing:.27em!important}
+#nbaFeaturedSection h2{font-size:clamp(21px,2.2vw,27px)!important;line-height:1!important;text-transform:uppercase;color:#f2f5f7!important;text-shadow:0 3px 18px rgba(0,0,0,.4)}
+#nbaFeaturedSection h2+p{font-size:10px!important;color:#9aa9b4!important;letter-spacing:.05em}
+#nbaFeaturedPublic{max-width:100%!important}
+#nbaFeaturedPublic article{
+ width:min(100%,960px)!important;margin:0 auto!important;padding:13px 24px!important;
+ border-radius:14px!important;border:1px solid rgba(217,226,232,.17)!important;
+ background:
+  linear-gradient(90deg,rgba(217,148,91,.09),transparent 27%,transparent 73%,rgba(126,157,177,.09)),
+  linear-gradient(145deg,#1c2a36,#101a24)!important;
+ box-shadow:0 14px 36px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.06)!important;
+ position:relative;overflow:hidden;animation:arenaReveal .65s cubic-bezier(.2,.7,.2,1) both;
+}
+#nbaFeaturedPublic article:before{
+ content:"";position:absolute;left:0;right:0;top:0;height:2px;
+ background:linear-gradient(90deg,transparent,#d9945b 22%,#f0c18d 50%,#8da8bb 78%,transparent);
+}
+#nbaFeaturedPublic article:after{
+ content:"";position:absolute;left:50%;top:50%;width:116px;height:116px;transform:translate(-50%,-50%);
+ border:1px solid rgba(220,230,237,.08);border-radius:50%;pointer-events:none;
+ box-shadow:0 0 0 15px rgba(220,230,237,.018);
+}
+#nbaFeaturedPublic article .grid{align-items:center!important;gap:8px!important}
+#nbaFeaturedPublic article img{
+ width:53px!important;height:53px!important;max-width:53px!important;object-fit:contain!important;
+ filter:drop-shadow(0 7px 9px rgba(0,0,0,.48));transition:transform .35s ease,filter .35s ease;
+}
+#nbaFeaturedPublic article:hover img{transform:translateY(-4px) scale(1.08);filter:drop-shadow(0 10px 13px rgba(0,0,0,.55))}
+#nbaFeaturedPublic article p{color:#f0f3f5!important;font-family:Barlow Condensed,sans-serif!important;font-size:17px!important;letter-spacing:.025em!important}
+#nbaFeaturedPublic article span{font-size:9px!important;letter-spacing:.17em!important;color:#9aabb6!important}
+#nbaFeaturedPublic article .text-emerald-300{color:#f0b77f!important;font-family:Barlow Condensed,sans-serif!important;font-size:18px!important;text-shadow:0 0 18px rgba(217,148,91,.28)}
+#nbaFeaturedPublic article>p{font-family:Manrope,sans-serif!important;font-size:10px!important;font-weight:500!important;color:#aab7c0!important;border-color:rgba(217,226,232,.12)!important}
+#nbaFeaturedPublic>p{padding:12px 15px;border-radius:10px;background:rgba(8,13,19,.42);border:1px solid rgba(218,230,238,.10);color:#d0a174!important;font-size:11px!important}
+#nbaAdminPanel{border-color:rgba(217,148,91,.20)!important}
+#nbaAdminPanel h3,#nbaAdminPanel h4{color:#efb982!important;font-size:17px!important;letter-spacing:.06em!important;text-transform:uppercase}
+#nbaAdminLogin,#nbaAdminForms>div,#nbaStatsAdmin{
+ background:linear-gradient(145deg,rgba(26,40,52,.9),rgba(12,21,29,.94))!important;
+ border-color:rgba(201,218,229,.14)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)!important;
+}
+main{
+ max-width:1320px!important;margin-top:20px!important;
+}
+main>div{
+ border-radius:17px!important;border:1px solid rgba(199,216,227,.13)!important;
+ background:linear-gradient(145deg,rgba(22,34,45,.97),rgba(12,21,29,.98))!important;
+ box-shadow:0 17px 42px rgba(0,0,0,.27),inset 0 1px 0 rgba(255,255,255,.045)!important;
+}
+main h2,main h3{color:#e9eff3!important;font-size:18px!important;letter-spacing:.045em!important;text-transform:uppercase}
+main label,main .text-xs{letter-spacing:.015em}
+main [class*="text-gray-400"],main [class*="text-gray-500"]{color:#94a4af!important}
+main [class*="text-gray-300"],main [class*="text-gray-200"]{color:#c7d1d8!important}
+main [class*="border-gray-"],#nbaAdminPanel [class*="border-gray-"]{border-color:rgba(196,213,224,.13)!important}
+main [class*="bg-gray-800"],main [class*="bg-gray-900/"]{
+ background:linear-gradient(145deg,rgba(27,42,54,.86),rgba(13,23,31,.92))!important;
+}
+main input,main select,main textarea,#nbaAdminPanel input,#nbaAdminPanel select,#nbaAdminPanel textarea{
+ color:#edf2f5!important;background:rgba(5,11,17,.72)!important;
+ border:1px solid rgba(176,197,210,.2)!important;border-radius:9px!important;
+}
+main input:focus,main select:focus,main textarea:focus,#nbaAdminPanel input:focus,#nbaAdminPanel select:focus{
+ outline:none!important;border-color:rgba(226,164,107,.75)!important;
+ box-shadow:0 0 0 3px rgba(217,148,91,.13)!important;
+}
+main button,#nbaAdminPanel button{
+ border:1px solid rgba(199,216,227,.17)!important;border-radius:9px!important;
+ transition:transform .22s ease,box-shadow .22s ease,filter .22s ease!important;
+}
+main button:hover,#nbaAdminPanel button:hover{transform:translateY(-2px);filter:brightness(1.1);box-shadow:0 9px 22px rgba(0,0,0,.25)!important}
+#btnCalculate{
+ min-height:54px!important;background:linear-gradient(105deg,#f0bd85,#c17a49 55%,#a65e37)!important;
+ color:#161b20!important;border:1px solid rgba(255,225,192,.45)!important;
+ box-shadow:0 11px 27px rgba(176,103,53,.25),inset 0 1px 0 rgba(255,255,255,.45)!important;
+ font-family:Barlow Condensed,sans-serif!important;font-size:19px!important;font-weight:800!important;
+ letter-spacing:.13em!important;text-transform:uppercase;
+}
+#expHomeScore,#expAwayScore,#expTotalScore{
+ font-family:Barlow Condensed,sans-serif!important;font-size:clamp(36px,4vw,49px)!important;
+ font-weight:800!important;letter-spacing:-.02em!important;color:#edf2f5!important;
+ text-shadow:0 5px 20px rgba(0,0,0,.42);
+}
+#expTotalScore{color:#e9ae78!important;text-shadow:0 0 22px rgba(217,148,91,.19)!important}
+#prob1,#prob2,#probX{font-family:Barlow Condensed,sans-serif!important;font-size:29px!important;font-weight:800!important}
+#prob1,#prob2{color:#9ac4ad!important}#probX{color:#e4b77f!important}
+main canvas{filter:contrast(1.06) saturate(.85)}
+.fa-basketball{color:#e9a56a!important}
+header .fa-basketball{animation:ballFloat 5s ease-in-out infinite}
+@keyframes ballFloat{0%,100%{transform:translateY(0) rotate(-9deg)}50%{transform:translateY(-4px) rotate(9deg)}}
+@keyframes arenaReveal{from{opacity:0;transform:translateY(12px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:700px){
+ header>div{padding-top:13px!important;padding-bottom:13px!important}
+ #nbaFeaturedSection{margin-top:12px!important}
+ #nbaFeaturedSection>div{padding:13px 14px!important}
+ #nbaFeaturedPublic article{padding:11px 12px!important}
+ #nbaFeaturedPublic article img{width:42px!important;height:42px!important}
+ #nbaFeaturedPublic article p{font-size:14px!important}
+ main{margin-top:13px!important;gap:13px!important}
+ main>div{border-radius:14px!important}
+ #expHomeScore,#expAwayScore,#expTotalScore{font-size:34px!important}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+
 </head>
 <body class="min-h-screen pb-12">
 
