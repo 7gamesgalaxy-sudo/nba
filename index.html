@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA 🏀</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #102227;
+            color: #879a94;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #111827;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 3px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #4b5563;
+            }
+
+        .glow-orange {
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.2);
+        }
+
+        .glow-blue {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+
+        select option {
+            background-color: #111827;
+            color: #f3f4f6;
+        }
+    
+    /* ===== COURTSIDE LIGHT — visual refresh only ===== */
+    :root {
+      color-scheme: light;
+      --ink: #26332f;
+      --muted: #78847e;
+      --mint: #9bc9b5;
+      --mint-deep: #477e69;
+      --cream: #f6f4ec;
+      --line: #e4e9e2;
+      --orange: #d88755;
+    }
+    html { background: var(--cream); }
+    body {
+      color:  firebrick !important;
+      background:
+        radial-gradient(ellipse at 92% 4%, rgba(155,201,181,.20), transparent 28rem),
+        radial-gradient(ellipse at 4% 42%, rgba(216,135,85,.08), transparent 24rem),
+        linear-gradient(135deg, #f8f7f1 0%, #eef3ef 55%, #f7f5ed 100%) !important;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: -.012em;
+    }
+    body::before {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none; z-index: -1;
+      opacity: .24;
+      background-image:
+        linear-gradient(firebrick 1px, transparent 1px),
+        linear-gradient(90deg, rgb(89, 128, 109, 0.36) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(to bottom, black, transparent 78%);
+    }
+    header {
+      background: rgba(255,255,251,.88) !important;
+      border-color: #e2e8e1 !important;
+      box-shadow: 0 8px 28px rgba(48,66,56,.055);
+      backdrop-filter: blur(18px) !important;
+    }
+    header .bg-gradient-to-tr {
+      background: linear-gradient(145deg, #b6d9c8, #6e9f88) !important;
+      color: #fff !important;
+      box-shadow: 0 8px 18px rgba(83,137,111,.20) !important;
+      border-radius: 15px !important;
+    }
+    h1, h2, h3 { color: #2e3c36 !important; letter-spacing: -.035em; }
+    header h1 { font-weight: 800 !important; }
+    header p { color: #849089 !important; }
+    main { position: relative; }
+    main > div, main section { min-width: 0; }
+    .bg-gray-900, [class*="bg-gray-900/"] {
+      background: rgba(255,255,252,.91) !important;
+    }
+    .bg-gray-800, [class*="bg-gray-800/"] {
+      background: #f0f4ef !important;
+    }
+    .bg-gray-700, [class*="bg-gray-700/"] { background: #e4ebe5 !important; }
+    [class*="border-gray-800"], [class*="border-gray-700"] {
+      border-color: var(--line) !important;
+    }
+    [class*="text-gray-200"], [class*="text-gray-300"],
+    [class*="text-gray-400"] { color: #697770 !important; }
+    [class*="text-gray-500"], [class*="text-gray-600"] { color: #929d96 !important; }
+    [class*="text-white"] { color: #26352e !important; }
+    [class*="text-orange-"] { color: #b9794e !important; }
+    [class*="text-blue-"] { color: #548875 !important; }
+    [class*="text-purple-"] { color: #788b83 !important; }
+    [class*="text-amber-"] { color: #b9824e !important; }
+    [class*="border-orange-"], [class*="border-blue-"],
+    [class*="border-purple-"] { border-color: #d5e4da !important; }
+    [class*="shadow-xl"], [class*="shadow-lg"] {
+      box-shadow: 0 14px 34px rgba(53,76,63,.075), 0 2px 7px rgba(53,76,63,.035) !important;
+    }
+    .rounded-2xl {
+      border: 1px solid #e5eae3 !important;
+      border-radius: 22px !important;
+    }
+    .rounded-xl { border-radius: 16px !important; }
+    input, select, textarea {
+      color: #2d3b34 !important;
+      background: #f7f9f5 !important;
+      border: 1px solid #dce5dc !important;
+      border-radius: 11px !important;
+      box-shadow: inset 0 1px 2px rgba(49,74,57,.035);
+      transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none !important;
+      border-color: #91bda7 !important;
+      box-shadow: 0 0 0 3px rgba(145,189,167,.20) !important;
+      background: #fff !important;
+    }
+    select option { background: #fffdf8 !important; color: #2d3b34 !important; }
+    button, #btnCalculate {
+      border: 0 !important;
+      background: linear-gradient(135deg, #5d9c7d, #477c68) !important;
+      color: #fff !important;
+      box-shadow: 0 8px 18px rgba(71,124,104,.20) !important;
+      border-radius: 14px !important;
+      letter-spacing: .015em;
+      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+    button:hover, #btnCalculate:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.04);
+      box-shadow: 0 12px 22px rgba(71,124,104,.25) !important;
+    }
+    button:active, #btnCalculate:active { transform: translateY(0) scale(.99); }
+    #btnCalculate { min-height: 52px; font-size: 13px; }
+    .glow-blue, .glow-orange { box-shadow: none !important; }
+    #expHomeScore, #expAwayScore, #expTotalScore {
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -.06em;
+      font-size: clamp(2rem, 4vw, 2.55rem) !important;
+    }
+    #expTotalScore { color: #b9824e !important; }
+    #prob1, #prob2, #probX { font-size: 1.55rem !important; font-weight: 800 !important; }
+    #prob1, #prob2 { color: #4d8871 !important; }
+    #probX { color: #9a9d83 !important; }
+    #quota1, #quota2, #quotaX {
+      background: #e8f1eb !important; color: #547866 !important;
+      border: 1px solid #dce9df;
+    }
+    #barOver { background: #78ad91 !important; }
+    #barUnder { background: #d7a58b !important; }
+    #matrixTableBody td { color: #52645a; border-color: #e8ede7 !important; }
+    #matrixTableBody tr:hover td { filter: brightness(.97); }
+    table thead { background: #edf2ec !important; color: #748179 !important; }
+    hr { border-color: #e5eae3 !important; }
+    canvas { max-width: 100%; }
+    /* Subtle court-inspired details */
+    main > div.lg\:col-span-8 > div:first-child { position: relative; overflow: hidden; }
+    main > div.lg\:col-span-8 > div:first-child::after {
+      content: ""; position: absolute; right: -42px; top: -58px;
+      width: 190px; height: 190px; border: 1px solid rgba(115,160,135,.13);
+      border-radius: 50%; pointer-events: none;
+      box-shadow: 0 0 0 22px rgba(115,160,135,.035), 0 0 0 45px rgba(115,160,135,.025);
+    }
+    .fa-basketball { color: inherit; }
+    ::-webkit-scrollbar-track { background: #c8e2bc !important; }
+    ::-webkit-scrollbar-thumb { background: #c4d2c7 !important; border-radius: 8px; }
+    @media (max-width: 640px) {
+      header .max-w-7xl { padding-top: 13px !important; padding-bottom: 13px !important; }
+      main { margin-top: 18px !important; }
+      .p-6 { padding: 1.1rem !important; }
+      .rounded-2xl { border-radius: 18px !important; }
+    }
+
+    </style>
+
+<style id="nba-dark-matte-redesign">
+:root{
+  color-scheme:dark;
+  --nba-bg:#56c1ff;
+  --nba-panel:#1f3e56;
+  --nba-panel-2:#202529;
+  --nba-line:rgba(220,228,232,.12);
+  --nba-text:#edf0f1;
+  --nba-muted:#9da7ac;
+  --nba-silver:#c8d0d4;
+  --nba-mint:#91c9b8;
+  --nba-mint-dark:#426f63;
+}
+html,body{
+  background:
+    radial-gradient(ellipse at 50% -15%,rgb(18, 53, 42, 0.72),transparent 42%),
+    linear-gradient(145deg,#0c0e10 0%,#0d1921 55%,#101214 100%) !important;
+  color:var(--nba-text) !important;
+}
+body{background-color:#ff004e !important}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.15;
+  background-image:linear-gradient(rgb(52, 11, 11, 0.84) 1px,transparent 1px),
+                   linear-gradient(90deg,rgb(82, 48, 48, 0.28) 1px,transparent 1px);
+  background-size:34px 34px;
+}
+body>*{position:relative;z-index:1}
+.bg-white,.bg-gray-50,.bg-slate-50,.bg-stone-50,.bg-amber-50{
+  background-color:#191d20 !important;
+}
+.bg-gray-100,.bg-slate-100,.bg-stone-100,.bg-emerald-50{
+  background-color:#202629 !important;
+}
+.text-gray-900,.text-slate-900,.text-stone-900,.text-black{color:#f0f2f3 !important}
+.text-gray-800,.text-slate-800,.text-stone-800{color:#e1e6e8 !important}
+.text-gray-700,.text-slate-700,.text-stone-700{color:#c5cdd1 !important}
+.text-gray-600,.text-slate-600,.text-stone-600,
+.text-gray-500,.text-slate-500,.text-stone-500{color:#98a3a8 !important}
+.border-gray-100,.border-gray-200,.border-slate-100,.border-slate-200,
+.border-stone-100,.border-stone-200{border-color:rgba(220,228,232,.12) !important}
+.shadow,.shadow-sm,.shadow-md,.shadow-lg{
+  box-shadow:0 14px 34px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+.rounded-xl,.rounded-2xl,.rounded-lg{border-color:rgba(220,228,232,.10)}
+input,select,textarea{
+  background:#111517 !important;color:#edf0f1 !important;
+  border:1px solid rgba(200,208,212,.20) !important;
+}
+input::placeholder,textarea::placeholder{color:#778187 !important}
+input:focus,select:focus,textarea:focus{
+  outline:none !important;border-color:#91c9b8 !important;
+  box-shadow:0 0 0 3px rgba(145,201,184,.13) !important;
+}
+button{
+  transition:transform .18s ease,filter .18s ease,box-shadow .18s ease;
+}
+button:hover{filter:brightness(1.09);transform:translateY(-1px)}
+button:active{transform:translateY(0)}
+/* Acción principal: menta sobria sobre negro mate */
+button.bg-emerald-500,button.bg-emerald-600,button.bg-green-500,
+button.bg-green-600,button[class*="from-emerald"]{
+  background:linear-gradient(135deg,#a5d7c7,#6fae9b) !important;
+  color:#101815 !important;border:1px solid rgba(210,245,232,.24) !important;
+  box-shadow:0 8px 22px rgba(83,151,128,.18),inset 0 1px 0 rgba(255,255,255,.35) !important;
+}
+button.bg-white,button.bg-gray-100,button.bg-slate-100{
+  background:#252b2f !important;color:#dce2e5 !important;
+  border:1px solid rgba(220,228,232,.14) !important;
+}
+hr{border-color:rgba(220,228,232,.12) !important}
+canvas{filter:saturate(.82)}
+/* Mantener los indicadores y acentos sin convertir todo en verde */
+.text-emerald-600,.text-green-600,.text-teal-600{color:#9bcfbe !important}
+.text-emerald-500,.text-green-500,.text-teal-500{color:#a6d8c8 !important}
+.bg-emerald-100,.bg-green-100,.bg-teal-100{background:#263b35 !important}
+.bg-red-50,.bg-rose-50{background:#382526 !important}
+.bg-blue-50,.bg-indigo-50{background:#242d38 !important}
+@media(max-width:640px){
+  body{background:#101214 !important}
+  .shadow,.shadow-sm,.shadow-md,.shadow-lg{box-shadow:0 8px 22px rgba(0,0,0,.22) !important}
+}
+</style>
+
+</head>
+<body class="min-h-screen pb-12">
+
+    <!-- Header -->
+    <header class="border-b border-gray-800 bg-gray-900/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-tr from-orange-600 to-amber-500 p-2.5 rounded-xl text-white shadow-lg shadow-orange-500/20">
+                    <i class="fa-solid fa-basketball text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                        NBA 🏀🏀<span id="nbaAdminSecretTrigger" role="button" tabindex="0" aria-label="Acceso" class="cursor-pointer select-none">🏀</span><span class="text-xs bg-emerald-500/15 text-emerald-300 font-semibold px-2 py-0.5 rounded border border-emerald-400/20">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</span>
+                    </h1>
+                    <p class="text-xs text-gray-400">Proyección de puntos y probabilidades NBA</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- PARTIDOS DESTACADOS NBA: lectura pública y administración privada -->
+    <section id="nbaFeaturedSection" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-5">
+      <div class="rounded-2xl border border-gray-700/60 bg-gray-900/70 p-4 sm:p-5 shadow-lg">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <p class="text-[10px] uppercase tracking-[.22em] text-emerald-300 font-bold">Selección especial</p>
+            <h2 class="text-lg font-extrabold text-white">Partidos destacados NBA</h2>
+            <p class="text-xs text-gray-400">Análisis y encuentros seleccionados de la semana</p>
+          </div>
+        </div>
+        <div id="nbaFeaturedPublic" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <p class="text-xs text-gray-400">Cargando partidos destacados…</p>
+        </div>
+        <div id="nbaAdminPanel" class="hidden mt-5 pt-4 border-t border-gray-700/70">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div><h3 class="font-bold text-sm text-white">Panel de administración</h3><p id="nbaAdminStatus" class="text-xs text-gray-400">Acceso exclusivo del administrador.</p></div>
+            <button type="button" id="nbaAdminLogout" class="hidden text-xs px-3 py-2 rounded-lg border border-gray-600">Cerrar sesión</button>
+          </div>
+          <div id="nbaAdminLogin" class="hidden rounded-xl bg-gray-800/60 p-3 space-y-2">
+            <p class="text-xs text-gray-300">Se enviará un enlace de acceso al correo autorizado.</p>
+            <button type="button" id="nbaSendLogin" class="text-xs px-4 py-2 rounded-lg">Enviar enlace de acceso</button>
+          </div>
+          <div id="nbaAdminForms" class="hidden grid grid-cols-1 xl:grid-cols-2 gap-4">
+            <div class="rounded-xl border border-gray-700 bg-gray-800/40 p-3 space-y-2" data-slot="1">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-300">Partido destacado 1</h4>
+              <label class="block text-[10px] text-gray-400">Equipo local</label><select id="nbaF1Home" class="w-full text-xs p-2"></select>
+              <label class="block text-[10px] text-gray-400">URL del escudo local</label><input id="nbaF1HomeLogo" type="url" placeholder="https://..." class="w-full text-xs p-2">
+              <label class="block text-[10px] text-gray-400">Equipo visitante</label><select id="nbaF1Away" class="w-full text-xs p-2"></select>
+              <label class="block text-[10px] text-gray-400">URL del escudo visitante</label><input id="nbaF1AwayLogo" type="url" placeholder="https://..." class="w-full text-xs p-2">
+              <label class="block text-[10px] text-gray-400">Fecha y hora</label><input id="nbaF1Date" type="datetime-local" class="w-full text-xs p-2">
+              <label class="block text-[10px] text-gray-400">Descripción (opcional)</label><textarea id="nbaF1Desc" rows="2" maxlength="500" placeholder="Comentario del partido…" class="w-full text-xs p-2"></textarea>
+              <div class="flex gap-2"><button type="button" data-save-slot="1" class="text-xs px-3 py-2 rounded-lg flex-1">Publicar / reemplazar</button><button type="button" data-delete-slot="1" class="text-xs px-3 py-2 rounded-lg border border-gray-600">Quitar</button></div>
+            </div>
+            <div class="rounded-xl border border-gray-700 bg-gray-800/40 p-3 space-y-2" data-slot="2">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-300">Partido destacado 2</h4>
+              <label class="block text-[10px] text-gray-400">Equipo local</label><select id="nbaF2Home" class="w-full text-xs p-2"></select>
+              <label class="block text-[10px] text-gray-400">URL del escudo local</label><input id="nbaF2HomeLogo" type="url" placeholder="https://..." class="w-full text-xs p-2">
+              <label class="block text-[10px] text-gray-400">Equipo visitante</label><select id="nbaF2Away" class="w-full text-xs p-2"></select>
+              <label class="block text-[10px] text-gray-400">URL del escudo visitante</label><input id="nbaF2AwayLogo" type="url" placeholder="https://..." class="w-full text-xs p-2">
+              <label class="block text-[10px] text-gray-400">Fecha y hora</label><input id="nbaF2Date" type="datetime-local" class="w-full text-xs p-2">
+              <label class="block text-[10px] text-gray-400">Descripción (opcional)</label><textarea id="nbaF2Desc" rows="2" maxlength="500" placeholder="Comentario del partido…" class="w-full text-xs p-2"></textarea>
+              <div class="flex gap-2"><button type="button" data-save-slot="2" class="text-xs px-3 py-2 rounded-lg flex-1">Publicar / reemplazar</button><button type="button" data-delete-slot="2" class="text-xs px-3 py-2 rounded-lg border border-gray-600">Quitar</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Left Panel: Inputs & Settings (4 cols) -->
+        <div class="lg:col-span-4 space-y-6">
+
+            <!-- Teams Setup Card -->
+            <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 shadow-xl">
+                <h2 class="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4 flex items-center justify-between">
+                    <span><i class="fa-solid fa-sliders text-orange-500 mr-2"></i>Parámetros del Partido</span>
+                </h2>
+
+                <form id="calcForm" class="space-y-4" onsubmit="return false;">
+                    <!-- Promedio Liga -->
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Promedio de puntos de la liga (por equipo)</label>
+                        <div class="relative">
+                            <input type="number" step="0.1" id="leagueAvg" value="114.5" placeholder="Ej. 114.5" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-orange-500 focus:outline-none font-semibold">
+                            <span class="absolute right-3 top-2.5 text-xs text-gray-500">PTS</span>
+                        </div>
+                        <p class="mt-1 text-[10px] text-gray-500">Promedio de puntos anotados por equipo. Actualízalo con el promedio de la temporada.</p>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Ritmo promedio de la liga (Pace)</label>
+                        <input type="number" step="0.1" id="leaguePace" value="100" placeholder="Ej. 100" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white font-semibold">
+                        <p class="mt-1 text-[10px] text-gray-500">Posesiones por equipo por partido; usa el dato de la misma temporada.</p>
+                    </div>
+
+                    <hr class="border-gray-800">
+
+                    <!-- Local Team -->
+                    <div class="bg-gray-800/40 border border-gray-800 p-3.5 rounded-xl space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-blue-400 uppercase tracking-wider"><i class="fa-solid fa-house mr-1"></i>Equipo Local</span>
+                            <input type="hidden" id="homeName" value="">
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div>
+                                <label class="block text-[10px] text-gray-400 uppercase">Ataque (PTS/J)</label>
+                                <input type="number" step="0.1" id="homeOff" value="" placeholder="Ej. 120.5" required class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2 text-xs text-white focus:ring-1 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-gray-400 uppercase">Defensa (PTS recibidos/J)</label>
+                                <input type="number" step="0.1" id="homeDef" value="" placeholder="Ej. 109.2" required class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2 text-xs text-white focus:ring-1 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-gray-400 uppercase">Pace local</label>
+                                <input type="number" step="0.1" id="homePace" value="" placeholder="Ej. 99.5" required class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2 text-xs text-white">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visitante Team -->
+                    <div class="bg-gray-800/40 border border-gray-800 p-3.5 rounded-xl space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-orange-400 uppercase tracking-wider"><i class="fa-solid fa-plane-departure mr-1"></i>Equipo Visitante</span>
+                            <input type="hidden" id="awayName" value="">
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div>
+                                <label class="block text-[10px] text-gray-400 uppercase">Ataque (PTS/J)</label>
+                                <input type="number" step="0.1" id="awayOff" value="" placeholder="Ej. 116.3" required class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2 text-xs text-white focus:ring-1 focus:ring-orange-500">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-gray-400 uppercase">Defensa (puntos recibidos / juego)</label>
+                                <input type="number" step="0.1" id="awayDef" value="" placeholder="Ej. 114.8" required class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2 text-xs text-white focus:ring-1 focus:ring-orange-500">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-gray-400 uppercase">Pace visitante</label>
+                                <input type="number" step="0.1" id="awayPace" value="" placeholder="Ej. 100.2" required class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2 text-xs text-white">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- User-entered market line; model adjustments remain internal -->
+                    <div class="bg-gray-800/20 border border-gray-800 p-3.5 rounded-xl space-y-2">
+                        <label class="block text-[10px] text-gray-300 uppercase tracking-wider mb-1" for="totalLineInput">
+                            Línea total de puntos (Over / Under)
+                        </label>
+                        <input type="number" step="0.5" id="totalLineInput" value="" placeholder="Opcional: ej. 230.5" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:ring-1 focus:ring-emerald-400 font-semibold">
+                        <p class="text-[10px] text-gray-500">Opcional. Si aún no tienes la línea del casino, déjala vacía: la proyección del partido se calculará de todos modos.</p>
+                    </div>
+
+                    <p id="validationMessage" class="hidden text-xs text-amber-300 bg-amber-500/10 border border-amber-500/20 rounded-lg p-2" role="status"></p>
+                    <button type="button" id="btnCalculate" class="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-orange-500/25 transition duration-200 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-calculator"></i> Calcular proyección
+                    </button>
+                </form>
+            </div>
+
+            <!-- Mathematical Explanation Collapsible -->
+            <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4 text-xs text-gray-400 space-y-2">
+                <div class="flex justify-between items-center cursor-pointer" onclick="document.getElementById('mathDetails').classList.toggle('hidden')">
+                    <span class="font-bold text-gray-300"><i class="fa-solid fa-circle-info text-blue-400 mr-1.5"></i>¿Cómo funciona esta fórmula?</span>
+                    <i class="fa-solid fa-chevron-down text-gray-500"></i>
+                </div>
+                <div id="mathDetails" class="hidden pt-2 space-y-2 border-t border-gray-800 text-[11px] leading-relaxed">
+                    <p><strong class="text-gray-300">Modelo Poisson:</strong> estima los puntos esperados de cada equipo usando su promedio ofensivo, los puntos que permite su rival y el promedio de anotación de la liga.</p>
+                    <p><strong class="text-gray-300">Ventaja de local:</strong> se aplica automáticamente como un ajuste interno del modelo; el usuario no necesita introducirla.</p>
+                    <p><strong class="text-gray-300">Probabilidades:</strong> la distribución Poisson estima victoria, empate al final del tiempo reglamentario (que puede llevar a prórroga) y derrota, además de Over/Under.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Panel: Dashboards & Analytics (8 cols) -->
+        <div class="lg:col-span-8 space-y-6">
+
+            <!-- Primary Outcome Card: Expected Points & 1X2 Probabilities -->
+            <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+
+                <!-- Expected Score Banner with Integrated Team Selectors -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center items-center mb-6 pb-6 border-b border-gray-800">
+
+                    <!-- Local result label -->
+                    <div class="bg-gray-800/50 p-4 rounded-xl border border-blue-500/30 glow-blue flex flex-col justify-between items-center min-h-[140px]">
+                        <div class="w-full mb-1">
+                            <label class="block text-[10px] text-blue-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-house mr-1"></i>Equipo Local</label>
+                            <select id="selectHomeTeam" aria-label="Seleccionar equipo local" class="w-full bg-gray-900/90 border border-blue-500/40 text-blue-300 font-bold text-xs rounded-lg px-2 py-2 focus:outline-none cursor-pointer text-center"><option value="">Selecciona equipo local</option></select>
+                        </div>
+                        <div class="text-3xl font-extrabold text-white my-1" id="expHomeScore">0.0</div>
+                        <span class="text-[10px] text-gray-400 uppercase tracking-wider">Puntos Esperados</span>
+                    </div>
+
+                    <!-- Total Expected -->
+                    <div class="space-y-1">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-widest">Total Esperado</span>
+                        <div class="text-3xl font-black text-amber-400" id="expTotalScore">0.0</div>
+                        <span class="text-[11px] text-gray-400 block font-medium" id="expMarginText">Margen: -</span>
+                    </div>
+
+                    <!-- Away result label -->
+                    <div class="bg-gray-800/50 p-4 rounded-xl border border-orange-500/30 glow-orange flex flex-col justify-between items-center min-h-[140px]">
+                        <div class="w-full mb-1">
+                            <label class="block text-[10px] text-orange-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-plane-departure mr-1"></i>Equipo Visitante</label>
+                            <select id="selectAwayTeam" aria-label="Seleccionar equipo visitante" class="w-full bg-gray-900/90 border border-orange-500/40 text-orange-300 font-bold text-xs rounded-lg px-2 py-2 focus:outline-none cursor-pointer text-center"><option value="">Selecciona equipo visitante</option></select>
+                        </div>
+                        <div class="text-3xl font-extrabold text-white my-1" id="expAwayScore">0.0</div>
+                        <span class="text-[10px] text-gray-400 uppercase tracking-wider">Puntos Esperados</span>
+                    </div>
+                </div>
+
+                <!-- 1X2 Probabilities -->
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Probabilidades de resultado (estimación Poisson)</h3>
+                <div class="grid grid-cols-3 gap-3 mb-6">
+                    <!-- Home Win (1) -->
+                    <div class="bg-gray-800/80 border border-gray-700/80 p-3 rounded-xl text-center hover:border-blue-500 transition">
+                        <span class="text-xs font-semibold text-gray-400 block">1 (Victoria Local)</span>
+                        <span class="text-xl font-bold text-blue-400 my-1 block" id="prob1">0%</span>
+                        <span class="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded font-mono" id="quota1">Cuota: -</span>
+                    </div>
+
+                    <!-- Draw/OT (X) -->
+                    <div class="bg-gray-800/80 border border-gray-700/80 p-3 rounded-xl text-center hover:border-purple-500 transition">
+                        <span class="text-xs font-semibold text-gray-400 block">X (Prórroga / Empate)</span>
+                        <span class="text-xl font-bold text-purple-400 my-1 block" id="probX">0%</span>
+                        <span class="text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded font-mono" id="quotaX">Cuota: -</span>
+                    </div>
+
+                    <!-- Away Win (2) -->
+                    <div class="bg-gray-800/80 border border-gray-700/80 p-3 rounded-xl text-center hover:border-orange-500 transition">
+                        <span class="text-xs font-semibold text-gray-400 block">2 (Victoria Visitante)</span>
+                        <span class="text-xl font-bold text-orange-400 my-1 block" id="prob2">0%</span>
+                        <span class="text-[10px] bg-orange-500/20 text-orange-300 px-2 py-0.5 rounded font-mono" id="quota2">Cuota: -</span>
+                    </div>
+                </div>
+
+                <!-- Over / Under Breakdown -->
+                <div class="bg-gray-800/30 border border-gray-800 rounded-xl p-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold text-gray-300 uppercase">Mercado Over / Under (<span id="lineValueText">230.5</span> Pts)</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-emerald-400 font-semibold">OVER (Más de)</span>
+                                <span class="font-bold text-white" id="probOver">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
+                                <div id="barOver" class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                            <span class="text-[10px] text-gray-500 mt-1 block font-mono" id="quotaOver">Cuota implícita: -</span>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-rose-400 font-semibold">UNDER (Menos de)</span>
+                                <span class="font-bold text-white" id="probUnder">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
+                                <div id="barUnder" class="bg-rose-500 h-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                            <span class="text-[10px] text-gray-500 mt-1 block font-mono" id="quotaUnder">Cuota implícita: -</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Score Distribution Chart -->
+                <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Distribución de Puntos por Equipo</h3>
+                    <div class="h-56 relative">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Margin of Victory Chart -->
+                <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Probabilidad por Margen de Victoria</h3>
+                    <div class="h-56 relative">
+                        <canvas id="marginChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Probabilities Matrix Table -->
+            <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 shadow-xl">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex justify-between items-center">
+                    <span>Matriz de Rangos de Puntuación (Poisson)</span>
+                    <span class="text-[10px] text-gray-500 font-normal">Escala normalizada</span>
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left text-gray-300">
+                        <thead class="text-[10px] uppercase bg-gray-800 text-gray-400">
+                            <tr>
+                                <th class="p-2">Local \ Visitante</th>
+                                <th class="p-2 text-center">&lt; 100</th>
+                                <th class="p-2 text-center">100 - 109</th>
+                                <th class="p-2 text-center">110 - 119</th>
+                                <th class="p-2 text-center">120 - 129</th>
+                                <th class="p-2 text-center">130+</th>
+                            </tr>
+                        </thead>
+                        <tbody id="matrixTableBody" class="divide-y divide-gray-800 font-mono">
+                            <!-- Injected dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Supabase SDK: conecta esta calculadora con la tabla NBA independiente -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- JavaScript Logic -->
+    <script>
+
+                //
+                // CONFIGURACIÓN: pega aquí la URL y la clave anon/public de tu proyecto Supabase.
+                // Nunca uses la clave service_role en este archivo.
+const SUPABASE_URL = 'https://swzkzcolwbqkkcpiavae.supabase.co/';
+const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
+                const NBA_TABLE = 'nba_team_stats';
+                const supabaseReady = window.supabase && SUPABASE_URL.startsWith('https://') &&
+                    SUPABASE_ANON_KEY !== 'PEGA_AQUI_TU_SUPABASE_ANON_KEY';
+                const supabaseClient = supabaseReady ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+                const NBA_FEATURED_TABLE = 'nba_featured_matches';
+                const NBA_ADMIN_EMAIL = '7games.galaxy@gmail.com';
+                let nbaFeaturedRows = [];
+
+                function nbaEscape(value) {
+                    return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+                }
+                function nbaSafeImage(url) {
+                    try { const u = new URL(url); return ['https:','http:'].includes(u.protocol) ? u.href : ''; } catch (_) { return ''; }
+                }
+                function nbaFormatDate(value) {
+                    if (!value) return 'Fecha por confirmar';
+                    const d = new Date(value);
+                    return Number.isNaN(d.getTime()) ? 'Fecha por confirmar' : d.toLocaleString('es-MX', {dateStyle:'medium', timeStyle:'short'});
+                }
+                function renderNbaFeatured() {
+                    const target = document.getElementById('nbaFeaturedPublic');
+                    const rows = [...nbaFeaturedRows].sort((a,b) => a.slot-b.slot);
+                    if (!rows.length) {
+                        target.innerHTML = '<p class="text-xs text-gray-400 md:col-span-2">Próximamente publicaremos nuestros partidos destacados.</p>';
+                        return;
+                    }
+                    target.innerHTML = rows.map(row => {
+                        const hLogo = nbaSafeImage(row.home_logo_url), aLogo = nbaSafeImage(row.away_logo_url);
+                        return `<article class="rounded-xl border border-gray-700/70 bg-gray-800/50 p-3">
+                          <div class="flex items-center justify-between mb-3"><span class="text-[9px] uppercase tracking-widest text-emerald-300 font-bold">Destacado ${row.slot}</span><span class="text-[10px] text-gray-400">${nbaEscape(nbaFormatDate(row.match_datetime))}</span></div>
+                          <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-center">
+                            <div class="min-w-0">${hLogo ? `<img src="${nbaEscape(hLogo)}" alt="" class="w-12 h-12 object-contain mx-auto mb-1" loading="lazy" referrerpolicy="no-referrer">` : ''}<p class="text-xs font-bold text-white">${nbaEscape(row.home_team)}</p><span class="text-[9px] text-gray-400">LOCAL</span></div>
+                            <span class="text-xs font-black text-emerald-300">VS</span>
+                            <div class="min-w-0">${aLogo ? `<img src="${nbaEscape(aLogo)}" alt="" class="w-12 h-12 object-contain mx-auto mb-1" loading="lazy" referrerpolicy="no-referrer">` : ''}<p class="text-xs font-bold text-white">${nbaEscape(row.away_team)}</p><span class="text-[9px] text-gray-400">VISITANTE</span></div>
+                          </div>${row.description ? `<p class="text-xs text-gray-300 mt-3 pt-2 border-t border-gray-700">${nbaEscape(row.description)}</p>` : ''}
+                        </article>`;
+                    }).join('');
+                }
+                async function loadNbaFeatured() {
+                    const target = document.getElementById('nbaFeaturedPublic');
+                    if (!supabaseClient) { target.innerHTML = '<p class="text-xs text-amber-300">No se pudo conectar con Supabase.</p>'; return; }
+                    const {data,error} = await supabaseClient.from(NBA_FEATURED_TABLE).select('*').order('slot');
+                    if (error) { target.innerHTML = '<p class="text-xs text-amber-300">No se pudieron cargar los partidos destacados. Revisa la configuración de la tabla NBA.</p>'; console.error('NBA featured load:', error); return; }
+                    nbaFeaturedRows = data || []; renderNbaFeatured();
+                }
+                function fillNbaAdminTeamSelects() {
+                    [1,2].forEach(slot => ['Home','Away'].forEach(side => {
+                        const el = document.getElementById(`nbaF${slot}${side}`);
+                        if (!el || el.options.length) return;
+                        el.add(new Option('Selecciona equipo', ''));
+                        nbaTeamNames.forEach(team => el.add(new Option(team, team)));
+                    }));
+                }
+                function setNbaAdminStatus(message) { document.getElementById('nbaAdminStatus').textContent = message; }
+                function showNbaAdmin(session) {
+                    const panel = document.getElementById('nbaAdminPanel');
+                    const logged = !!(session && session.user && session.user.email && session.user.email.toLowerCase() === NBA_ADMIN_EMAIL);
+                    panel.classList.remove('hidden');
+                    document.getElementById('nbaAdminLogin').classList.toggle('hidden', logged);
+                    document.getElementById('nbaAdminForms').classList.toggle('hidden', !logged);
+                    document.getElementById('nbaAdminLogout').classList.toggle('hidden', !logged);
+                    if (session && !logged) setNbaAdminStatus('Esta cuenta no tiene permiso para administrar. Cierra sesión e ingresa con el correo autorizado.');
+                    else if (logged) { setNbaAdminStatus('Sesión autorizada: ' + NBA_ADMIN_EMAIL); fillNbaAdminTeamSelects(); populateNbaAdminForms(); }
+                    else setNbaAdminStatus('Acceso exclusivo del administrador.');
+                }
+                function populateNbaAdminForms() {
+                    [1,2].forEach(slot => {
+                        const row = nbaFeaturedRows.find(item => Number(item.slot) === slot);
+                        const localDateValue = row?.match_datetime ? (() => { const d = new Date(row.match_datetime); const pad = n => String(n).padStart(2,'0'); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`; })() : '';
+                        const values = {Home:row?.home_team || '', Away:row?.away_team || '', HomeLogo:row?.home_logo_url || '', AwayLogo:row?.away_logo_url || '', Date:localDateValue, Desc:row?.description || ''};
+                        Object.entries(values).forEach(([key,value]) => { const el=document.getElementById(`nbaF${slot}${key}`); if(el) el.value=value; });
+                    });
+                }
+                async function saveNbaFeatured(slot) {
+                    const get = suffix => document.getElementById(`nbaF${slot}${suffix}`).value.trim();
+                    const home=get('Home'), away=get('Away'), date=get('Date'), homeLogo=get('HomeLogo'), awayLogo=get('AwayLogo'), desc=get('Desc');
+                    if (!home || !away || home===away || !date) { alert('Selecciona dos equipos distintos y agrega fecha y hora.'); return; }
+                    for (const [label,url] of [['escudo local',homeLogo],['escudo visitante',awayLogo]]) if (url && !nbaSafeImage(url)) { alert('La URL del '+label+' debe comenzar con http:// o https://'); return; }
+                    const payload={slot,home_team:home,away_team:away,home_logo_url:homeLogo||null,away_logo_url:awayLogo||null,match_datetime:new Date(date).toISOString(),description:desc||null};
+                    const {error}=await supabaseClient.from(NBA_FEATURED_TABLE).upsert(payload,{onConflict:'slot'});
+                    if(error){alert('No se pudo publicar: '+error.message);return;}
+                    await loadNbaFeatured(); setNbaAdminStatus('Partido destacado '+slot+' publicado correctamente.');
+                }
+                async function deleteNbaFeatured(slot) {
+                    if(!confirm('¿Quitar el partido destacado '+slot+'?')) return;
+                    const {error}=await supabaseClient.from(NBA_FEATURED_TABLE).delete().eq('slot',slot);
+                    if(error){alert('No se pudo quitar: '+error.message);return;}
+                    await loadNbaFeatured(); populateNbaAdminForms(); setNbaAdminStatus('Partido destacado '+slot+' eliminado.');
+                }
+                function initNbaFeaturedAdmin() {
+                    const open=document.getElementById('nbaAdminSecretTrigger');
+                    const toggleAdmin=async()=>{
+                        const panel=document.getElementById('nbaAdminPanel'); panel.classList.toggle('hidden');
+                        const {data}=await supabaseClient.auth.getSession(); showNbaAdmin(data?.session || null);
+                    };
+                    open.addEventListener('click',toggleAdmin);
+                    open.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleAdmin();}});
+                    document.getElementById('nbaSendLogin').addEventListener('click',async()=>{
+                        const btn=document.getElementById('nbaSendLogin'); btn.disabled=true;
+                        const {error}=await supabaseClient.auth.signInWithOtp({email:NBA_ADMIN_EMAIL,options:{emailRedirectTo:window.location.href,shouldCreateUser:false}});
+                        btn.disabled=false;
+                        if(error){setNbaAdminStatus('No se pudo enviar el enlace: '+error.message);return;}
+                        setNbaAdminStatus('Enlace enviado a '+NBA_ADMIN_EMAIL+'. Abre tu correo en este dispositivo para iniciar sesión.');
+                    });
+                    document.getElementById('nbaAdminLogout').addEventListener('click',async()=>{await supabaseClient.auth.signOut();showNbaAdmin(null);});
+                    document.querySelectorAll('[data-save-slot]').forEach(btn=>btn.addEventListener('click',()=>saveNbaFeatured(Number(btn.dataset.saveSlot))));
+                    document.querySelectorAll('[data-delete-slot]').forEach(btn=>btn.addEventListener('click',()=>deleteNbaFeatured(Number(btn.dataset.deleteSlot))));
+                    supabaseClient.auth.onAuthStateChange((_event,session)=>{ if(!document.getElementById('nbaAdminPanel').classList.contains('hidden')) showNbaAdmin(session); });
+                    supabaseClient.auth.getSession().then(({data})=>{ if(data?.session) showNbaAdmin(data.session); });
+                }
+
+                let distChartInstance = null;
+                let marginChartInstance = null;
+                let homeTeamRecord = null;
+                let awayTeamRecord = null;
+
+                // Solo nombres: las estadísticas NO están precargadas.
+                const nbaTeamNames = [
+                    'Atlanta Hawks','Boston Celtics','Brooklyn Nets','Charlotte Hornets','Chicago Bulls',
+                    'Cleveland Cavaliers','Dallas Mavericks','Denver Nuggets','Detroit Pistons','Golden State Warriors',
+                    'Houston Rockets','Indiana Pacers','Los Angeles Clippers','Los Angeles Lakers','Memphis Grizzlies',
+                    'Miami Heat','Milwaukee Bucks','Minnesota Timberwolves','New Orleans Pelicans','New York Knicks',
+                    'Oklahoma City Thunder','Orlando Magic','Philadelphia 76ers','Phoenix Suns','Portland Trail Blazers',
+                    'Sacramento Kings','San Antonio Spurs','Toronto Raptors','Utah Jazz','Washington Wizards'
+                ];
+
+                function setTeamFields(side, record) {
+                    const isHome = side === 'home';
+                    const ids = isHome
+                        ? { off: 'homeOff', def: 'homeDef', pace: 'homePace', name: 'homeName' }
+                        : { off: 'awayOff', def: 'awayDef', pace: 'awayPace', name: 'awayName' };
+                    document.getElementById(ids.name).value = record ? record.team_name : '';
+                    document.getElementById(ids.off).value = record ? (isHome ? record.points_for_home : record.points_for_away) ?? '' : '';
+                    document.getElementById(ids.def).value = record ? (isHome ? record.points_against_home : record.points_against_away) ?? '' : '';
+                    document.getElementById(ids.pace).value = record ? (isHome ? record.pace_home : record.pace_away) ?? '' : '';
+                }
+
+                function populateTeamDropdowns() {
+                    const homeSelect = document.getElementById('selectHomeTeam');
+                    const awaySelect = document.getElementById('selectAwayTeam');
+                    nbaTeamNames.forEach(team => {
+                        [homeSelect, awaySelect].forEach(select => {
+                            const option = document.createElement('option');
+                            option.value = team; option.textContent = team; select.appendChild(option);
+                        });
+                    });
+                    // No se seleccionan equipos ni se rellenan estadísticas automáticamente.
+                    homeSelect.value = ''; awaySelect.value = '';
+                    setTeamFields('home', null); setTeamFields('away', null);
+                    const status = document.getElementById('validationMessage');
+                    if (!supabaseClient) {
+                        status.textContent = 'Falta configurar la URL y la clave pública de Supabase en este archivo.';
+                        status.classList.remove('hidden');
+                    }
+                }
+
+                async function loadTeamStats(teamName, side) {
+                    const status = document.getElementById('validationMessage');
+                    setTeamFields(side, null);
+                    if (side === 'home') homeTeamRecord = null; else awayTeamRecord = null;
+                    if (!teamName) { calculateModel(); return; }
+                    if (!supabaseClient) {
+                        status.textContent = 'Configura primero Supabase para consultar las estadísticas NBA.';
+                        status.classList.remove('hidden'); return;
+                    }
+                    status.textContent = 'Consultando estadísticas de ' + teamName + '…';
+                    status.classList.remove('hidden');
+                    const { data, error } = await supabaseClient.from(NBA_TABLE).select('*').eq('team_name', teamName).maybeSingle();
+                    if (error) {
+                        status.textContent = 'No se pudieron consultar los datos: ' + error.message;
+                        return;
+                    }
+                    if (!data) {
+                        status.textContent = teamName + ' todavía no tiene estadísticas registradas en Supabase.';
+                        calculateModel(); return;
+                    }
+                    if (side === 'home') homeTeamRecord = data; else awayTeamRecord = data;
+                    setTeamFields(side, data);
+                    status.textContent = 'Estadísticas cargadas: ' + teamName + (data.season ? ' · Temporada ' + data.season : '') + '.';
+                    calculateModel();
+                }
+
+                function onHomeTeamChange() {
+                    loadTeamStats(document.getElementById('selectHomeTeam').value, 'home');
+                }
+                function onAwayTeamChange() {
+                    loadTeamStats(document.getElementById('selectAwayTeam').value, 'away');
+                }
+
+                // Mathematical Helper Functions
+
+                function poissonPMF(k, lambda) {
+                    if (lambda <= 0 || k < 0) return 0;
+                    const logP = k * Math.log(lambda) - lambda - lgamma(k + 1);
+                    return Math.exp(logP);
+                }
+
+                function lgamma(z) {
+                    const c = [
+                        676.5203681218851, -1259.1392167224028,
+                        771.32342877765313, -176.61502916214059,
+                        12.507343278686905, -0.13857109526572012,
+                        9.9843695780195716e-6, 1.5056327351493116e-7
+                    ];
+                    if (z < 0.5) return Math.log(Math.PI / Math.sin(Math.PI * z)) - lgamma(1 - z);
+                    z -= 1;
+                    let x = 0.99999999999980993;
+                    for (let i = 0; i < c.length; i++) x += c[i] / (z + i + 1);
+                    const t = z + c.length - 0.5;
+                    return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(x);
+                }
+
+                // Main Calculation Engine
+                function calculateModel() {
+                    // Required user inputs. Do not silently substitute missing values.
+                    const leagueAvg = Number(document.getElementById('leagueAvg').value);
+                    const leaguePace = Number(document.getElementById('leaguePace').value);
+                    const homePace = Number(document.getElementById('homePace').value);
+                    const awayPace = Number(document.getElementById('awayPace').value);
+                    const homeOff = Number(document.getElementById('homeOff').value);
+                    const homeDef = Number(document.getElementById('homeDef').value);
+                    const awayOff = Number(document.getElementById('awayOff').value);
+                    const awayDef = Number(document.getElementById('awayDef').value);
+                    const line = Number(document.getElementById('totalLineInput').value);
+                    const homeName = document.getElementById('homeName').value.trim();
+                    const awayName = document.getElementById('awayName').value.trim();
+
+                    const requiredValues = [leagueAvg, leaguePace, homeOff, homeDef, awayOff, awayDef, homePace, awayPace];
+                    const hasLine = document.getElementById('totalLineInput').value.trim() !== '';
+                    if (!homeName || !awayName || requiredValues.some(v => !Number.isFinite(v)) ||
+                        leagueAvg <= 0 || leaguePace <= 0 || homeOff <= 0 || homeDef <= 0 || awayOff <= 0 || awayDef <= 0 || homePace <= 0 || awayPace <= 0 ||
+                        (hasLine && (!Number.isFinite(line) || line <= 0))) {
+                        const msg = document.getElementById('validationMessage');
+                        msg.textContent = 'Selecciona ambos equipos y asegúrate de que tengan estadísticas registradas: puntos a favor, puntos recibidos y Pace. También revisa los promedios de la liga. La línea Over/Under es opcional.';
+                        msg.classList.remove('hidden');
+                        return;
+                    }
+
+                    document.getElementById('validationMessage').classList.add('hidden');
+
+                    // Ventaja de local fija e interna: no requiere intervención del usuario.
+                    const homeAdv = 2.5;
+
+
+                    // 1. Calculate Expected Lambda (Home) & Mu (Away)
+                    const homeAttackStrength = homeOff / leagueAvg;
+                    const awayDefenseWeakness = awayDef / leagueAvg;
+                    const lambda = homeAttackStrength * awayDefenseWeakness * leagueAvg + (homeAdv / 2);
+
+                    const awayAttackStrength = awayOff / leagueAvg;
+                    const homeDefenseWeakness = homeDef / leagueAvg;
+                    const mu = awayAttackStrength * homeDefenseWeakness * leagueAvg - (homeAdv / 2);
+
+                    // Ajuste de ritmo: adapta la proyección al Pace combinado de ambos equipos.
+                    const paceFactor = ((homePace + awayPace) / 2) / leaguePace;
+                    const adjustedLambda = lambda * paceFactor;
+                    const adjustedMu = mu * paceFactor;
+
+                    // Update Header Display
+                    document.getElementById('expHomeScore').textContent = adjustedLambda.toFixed(1);
+                    document.getElementById('expAwayScore').textContent = adjustedMu.toFixed(1);
+                    document.getElementById('expTotalScore').textContent = (adjustedLambda + adjustedMu).toFixed(1);
+                    document.getElementById('lineValueText').textContent = hasLine ? line : 'Pendiente';
+
+                    const margin = adjustedLambda - adjustedMu;
+                    document.getElementById('expMarginText').textContent = `Margen: ${margin >= 0 ? '+' : ''}${margin.toFixed(1)} pts (${margin >= 0 ? homeName : awayName})`;
+
+                    // 2. Compute independent Poisson probabilities
+                    const minPt = Math.max(60, Math.floor(Math.min(adjustedLambda, adjustedMu) - 45));
+                    const maxPt = Math.ceil(Math.max(adjustedLambda, adjustedMu) + 45);
+
+                    let probHomeWin = 0;
+                    let probDrawOT = 0;
+                    let probAwayWin = 0;
+                    let probOver = 0;
+                    let probUnder = 0;
+
+                    const homeDist = {};
+                    const awayDist = {};
+
+                    // Margin tracking
+                    const marginBins = { 'Home 15+': 0, 'Home 7-14': 0, 'Home 1-6': 0, 'OT (0)': 0, 'Away 1-6': 0, 'Away 7-14': 0, 'Away 15+': 0 };
+
+                    // Grid calculation
+                    for (let h = minPt; h <= maxPt; h++) {
+                        const pH = poissonPMF(h, adjustedLambda);
+                        homeDist[h] = (homeDist[h] || 0) + pH;
+
+                        for (let a = minPt; a <= maxPt; a++) {
+                            const pA = poissonPMF(a, adjustedMu);
+                            if (h === minPt) awayDist[a] = (awayDist[a] || 0) + pA;
+                            const jointProb = pH * pA;
+
+                            // Total points Over/Under
+                            if (hasLine) {
+                                if (h + a > line) {
+                                    probOver += jointProb;
+                                } else {
+                                    probUnder += jointProb;
+                                }
+                            }
+
+                            // 1X2 and Margins
+                            const diff = h - a;
+                            if (diff > 0) {
+                                probHomeWin += jointProb;
+                                if (diff >= 15) marginBins['Home 15+'] += jointProb;
+                                else if (diff >= 7) marginBins['Home 7-14'] += jointProb;
+                                else marginBins['Home 1-6'] += jointProb;
+                            } else if (diff < 0) {
+                                probAwayWin += jointProb;
+                                const absDiff = Math.abs(diff);
+                                if (absDiff >= 15) marginBins['Away 15+'] += jointProb;
+                                else if (absDiff >= 7) marginBins['Away 7-14'] += jointProb;
+                                else marginBins['Away 1-6'] += jointProb;
+                            } else {
+                                // Exact tie in regulation -> OT
+                                probDrawOT += jointProb;
+                                marginBins['OT (0)'] += jointProb;
+                            }
+                        }
+                    }
+
+                    // Normalize probabilities to sum exactly 1.0
+                    const totalProb = probHomeWin + probDrawOT + probAwayWin;
+                    probHomeWin /= totalProb;
+                    probDrawOT /= totalProb;
+                    probAwayWin /= totalProb;
+
+                    if (hasLine) {
+                        const totalOU = probOver + probUnder;
+                        if (totalOU > 0) {
+                            probOver /= totalOU;
+                            probUnder /= totalOU;
+                        }
+                    }
+
+                    // Render 1X2
+                    document.getElementById('prob1').textContent = (probHomeWin * 100).toFixed(1) + '%';
+                    document.getElementById('probX').textContent = (probDrawOT * 100).toFixed(1) + '%';
+                    document.getElementById('prob2').textContent = (probAwayWin * 100).toFixed(1) + '%';
+
+                    document.getElementById('quota1').textContent = `Cuota: ${(1 / probHomeWin).toFixed(2)}`;
+                    document.getElementById('quotaX').textContent = `Cuota: ${(1 / probDrawOT).toFixed(2)}`;
+                    document.getElementById('quota2').textContent = `Cuota: ${(1 / probAwayWin).toFixed(2)}`;
+
+                    // Render Over/Under
+                    if (hasLine) {
+                        document.getElementById('probOver').textContent = (probOver * 100).toFixed(1) + '%';
+                        document.getElementById('probUnder').textContent = (probUnder * 100).toFixed(1) + '%';
+                        document.getElementById('barOver').style.width = `${(probOver * 100).toFixed(1)}%`;
+                        document.getElementById('barUnder').style.width = `${(probUnder * 100).toFixed(1)}%`;
+                        document.getElementById('quotaOver').textContent = `Cuota implícita: ${(1 / probOver).toFixed(2)}`;
+                        document.getElementById('quotaUnder').textContent = `Cuota implícita: ${(1 / probUnder).toFixed(2)}`;
+                    } else {
+                        document.getElementById('probOver').textContent = '—';
+                        document.getElementById('probUnder').textContent = '—';
+                        document.getElementById('barOver').style.width = '0%';
+                        document.getElementById('barUnder').style.width = '0%';
+                        document.getElementById('quotaOver').textContent = 'Ingresa la línea para calcular';
+                        document.getElementById('quotaUnder').textContent = 'Ingresa la línea para calcular';
+                    }
+
+                    // Render Charts
+                    renderDistributionChart(homeName, awayName, adjustedLambda, adjustedMu);
+                    renderMarginChart(marginBins, homeName, awayName);
+
+                    // Render Matrix Table
+                    renderMatrixTable(adjustedLambda, adjustedMu);
+                }
+
+                // Render Score Range Matrix Table
+                function renderMatrixTable(lambda, mu) {
+                    const ranges = [
+                        { label: '< 100', min: 0, max: 99 },
+                        { label: '100-109', min: 100, max: 109 },
+                        { label: '110-119', min: 110, max: 119 },
+                        { label: '120-129', min: 120, max: 129 },
+                        { label: '130+', min: 130, max: 200 }
+                    ];
+
+                    const tbody = document.getElementById('matrixTableBody');
+                    tbody.innerHTML = '';
+
+                    ranges.forEach(hRange => {
+                        let rowHTML = `<tr><td class="p-2 font-bold bg-gray-800/50 text-gray-300">${hRange.label}</td>`;
+                        ranges.forEach(aRange => {
+                            let cellProb = 0;
+                            for (let h = hRange.min; h <= hRange.max; h++) {
+                                for (let a = aRange.min; a <= aRange.max; a++) {
+                                    const pH = poissonPMF(h, lambda);
+                                    const pA = poissonPMF(a, mu);
+                                    cellProb += pH * pA;
+                                }
+                            }
+                            const pct = (cellProb * 100).toFixed(1);
+                            const alpha = Math.min(1, cellProb * 8);
+                            rowHTML += `<td class="p-2 text-center" style="background-color: rgba(249, 115, 22, ${alpha * 0.25});">${pct}%</td>`;
+                        });
+                        rowHTML += `</tr>`;
+                        tbody.innerHTML += rowHTML;
+                    });
+                }
+
+                // Render Points Distribution Line Chart
+                function renderDistributionChart(homeName, awayName, lambda, mu) {
+                    const ctx = document.getElementById('distributionChart').getContext('2d');
+
+                    const labels = [];
+                    const homeData = [];
+                    const awayData = [];
+
+                    const start = Math.floor(Math.min(lambda, mu) - 25);
+                    const end = Math.ceil(Math.max(lambda, mu) + 25);
+
+                    for (let i = start; i <= end; i += 2) {
+                        labels.push(i);
+                        homeData.push((poissonPMF(i, lambda) * 100).toFixed(2));
+                        awayData.push((poissonPMF(i, mu) * 100).toFixed(2));
+                    }
+
+                    if (distChartInstance) distChartInstance.destroy();
+
+                    distChartInstance = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: homeName,
+                                    data: homeData,
+                                    borderColor: '#78ad91',
+                                    backgroundColor: 'rgba(120, 173, 145, 0.14)',
+                                    fill: true,
+                                    tension: 0.4,
+                                    pointRadius: 0
+                                },
+                                {
+                                    label: awayName,
+                                    data: awayData,
+                                    borderColor: '#c58a62',
+                                    backgroundColor: 'rgba(197, 138, 98, 0.12)',
+                                    fill: true,
+                                    tension: 0.4,
+                                    pointRadius: 0
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { labels: { color: '#7c8981', font: { size: 10 } } }
+                            },
+                            scales: {
+                                x: { grid: { color: '#e4ebe5' }, ticks: { color: '#7c8981', font: { size: 9 } } },
+                                y: { grid: { color: '#e4ebe5' }, ticks: { color: '#7c8981', font: { size: 9 } } }
+                            }
+                        }
+                    });
+                }
+
+                // Render Margin of Victory Bar Chart
+                function renderMarginChart(marginBins, homeName, awayName) {
+                    const ctx = document.getElementById('marginChart').getContext('2d');
+
+                    const labels = [`${homeName} 15+`, `${homeName} 7-14`, `${homeName} 1-6`, 'Prórroga', `${awayName} 1-6`, `${awayName} 7-14`, `${awayName} 15+`];
+                    const data = [
+                        (marginBins['Home 15+'] * 100).toFixed(1),
+                        (marginBins['Home 7-14'] * 100).toFixed(1),
+                        (marginBins['Home 1-6'] * 100).toFixed(1),
+                        (marginBins['OT (0)'] * 100).toFixed(1),
+                        (marginBins['Away 1-6'] * 100).toFixed(1),
+                        (marginBins['Away 7-14'] * 100).toFixed(1),
+                        (marginBins['Away 15+'] * 100).toFixed(1)
+                    ];
+
+                    if (marginChartInstance) marginChartInstance.destroy();
+
+                    marginChartInstance = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Probabilidad (%)',
+                                data: data,
+                                backgroundColor: [
+                                    'rgba(120, 173, 145, 0.82)',
+                                    'rgba(120, 173, 145, 0.65)',
+                                    'rgba(120, 173, 145, 0.48)',
+                                    'rgba(177, 177, 150, 0.62)',
+                                    'rgba(197, 138, 98, 0.48)',
+                                    'rgba(197, 138, 98, 0.65)',
+                                    'rgba(197, 138, 98, 0.82)'
+                                ],
+                                borderRadius: 4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false }
+                            },
+                            scales: {
+                                x: { grid: { display: false }, ticks: { color: '#7c8981', font: { size: 8 } } },
+                                y: { grid: { color: '#e4ebe5' }, ticks: { color: '#7c8981', font: { size: 9 } } }
+                            }
+                        }
+                    });
+                }
+
+                document.getElementById('selectHomeTeam').addEventListener('change', onHomeTeamChange);
+                document.getElementById('selectAwayTeam').addEventListener('change', onAwayTeamChange);
+
+                // Initialize on Click & Load
+                document.getElementById('btnCalculate').addEventListener('click', calculateModel);
+                window.addEventListener('load', () => {
+                    populateTeamDropdowns();
+                    loadNbaFeatured();
+                    if (supabaseClient) initNbaFeaturedAdmin();
+                });
+    </script>
+</body>
+</html>
