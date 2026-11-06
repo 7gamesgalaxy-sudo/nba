@@ -327,9 +327,9 @@ canvas{filter:saturate(.82)}
             <div class="rounded-xl border border-gray-700 bg-gray-800/40 p-3 space-y-2" data-slot="1">
               <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-300">Partido destacado 1</h4>
               <label class="block text-[10px] text-gray-400">Equipo local</label><select id="nbaF1Home" class="w-full text-xs p-2"></select>
-              <label class="block text-[10px] text-gray-400">URL del escudo local</label><input id="nbaF1HomeLogo" type="url" placeholder="https://..." class="w-full text-xs p-2">
+              <label class="block text-[10px] text-gray-400">Escudo local (URL o archivo)</label><input id="nbaF1HomeLogo" type="text" placeholder="https://... o selecciona un archivo abajo" class="w-full text-xs p-2"><input id="nbaF1HomeLogoFile" type="file" accept="image/*,.svg,.txt" class="w-full text-[10px] text-gray-300"><img id="nbaF1HomeLogoPreview" class="hidden w-12 h-12 object-contain rounded bg-gray-900/50 p-1" alt="Vista previa escudo local">
               <label class="block text-[10px] text-gray-400">Equipo visitante</label><select id="nbaF1Away" class="w-full text-xs p-2"></select>
-              <label class="block text-[10px] text-gray-400">URL del escudo visitante</label><input id="nbaF1AwayLogo" type="url" placeholder="https://..." class="w-full text-xs p-2">
+              <label class="block text-[10px] text-gray-400">Escudo visitante (URL o archivo)</label><input id="nbaF1AwayLogo" type="text" placeholder="https://... o selecciona un archivo abajo" class="w-full text-xs p-2"><input id="nbaF1AwayLogoFile" type="file" accept="image/*,.svg,.txt" class="w-full text-[10px] text-gray-300"><img id="nbaF1AwayLogoPreview" class="hidden w-12 h-12 object-contain rounded bg-gray-900/50 p-1" alt="Vista previa escudo visitante">
               <label class="block text-[10px] text-gray-400">Fecha y hora</label><input id="nbaF1Date" type="datetime-local" class="w-full text-xs p-2">
               <label class="block text-[10px] text-gray-400">Descripción (opcional)</label><textarea id="nbaF1Desc" rows="2" maxlength="500" placeholder="Comentario del partido…" class="w-full text-xs p-2"></textarea>
               <div class="flex gap-2"><button type="button" data-save-slot="1" class="text-xs px-3 py-2 rounded-lg flex-1">Publicar / reemplazar</button><button type="button" data-delete-slot="1" class="text-xs px-3 py-2 rounded-lg border border-gray-600">Quitar</button></div>
@@ -609,7 +609,39 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
                     return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
                 }
                 function nbaSafeImage(url) {
-                    try { const u = new URL(url); return ['https:','http:'].includes(u.protocol) ? u.href : ''; } catch (_) { return ''; }
+                    if (typeof url !== 'string' || !url.trim()) return '';
+                    const value = url.trim();
+                    if (/^data:image\/(png|jpeg|jpg|webp|gif|svg\+xml);base64,[a-z0-9+/]+=*$/i.test(value)) return value;
+                    try { const u = new URL(value); return ['https:','http:'].includes(u.protocol) ? u.href : ''; } catch (_) { return ''; }
+                }
+                function nbaShowLogoPreview(side) {
+                    const input = document.getElementById('nbaF1' + side + 'Logo');
+                    const preview = document.getElementById('nbaF1' + side + 'LogoPreview');
+                    const safe = nbaSafeImage(input.value);
+                    if (safe) { preview.src = safe; preview.classList.remove('hidden'); }
+                    else { preview.removeAttribute('src'); preview.classList.add('hidden'); }
+                }
+                function nbaReadLogoFile(file, side) {
+                    if (!file) return;
+                    const input = document.getElementById('nbaF1' + side + 'Logo');
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        let data = String(reader.result || '');
+                        // También admite el SVG que se haya guardado como archivo .txt.
+                        if (file.name.toLowerCase().endsWith('.txt')) {
+                            const raw = String(reader.result || '').trim();
+                            if (!/<svg[\s>]/i.test(raw)) { alert('Ese archivo TXT no contiene un SVG válido.'); return; }
+                            const bytes = new TextEncoder().encode(raw);
+                            let binary = ''; bytes.forEach(byte => binary += String.fromCharCode(byte));
+                            data = 'data:image/svg+xml;base64,' + btoa(binary);
+                        }
+                        if (!nbaSafeImage(data)) { alert('No pude leer ese escudo. Usa PNG, JPG, WEBP o SVG.'); return; }
+                        input.value = data;
+                        nbaShowLogoPreview(side);
+                        saveNbaFeaturedDraft();
+                    };
+                    if (file.name.toLowerCase().endsWith('.txt')) reader.readAsText(file);
+                    else reader.readAsDataURL(file);
                 }
                 function nbaFormatDate(value) {
                     if (!value) return 'Fecha por confirmar';
@@ -692,6 +724,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
                         const localDateValue = row?.match_datetime ? (() => { const d = new Date(row.match_datetime); const pad = n => String(n).padStart(2,'0'); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`; })() : '';
                         const values = {Home:row?.home_team || '', Away:row?.away_team || '', HomeLogo:row?.home_logo_url || '', AwayLogo:row?.away_logo_url || '', Date:localDateValue, Desc:row?.description || ''};
                         Object.entries(values).forEach(([key,value]) => { const el=document.getElementById(`nbaF${slot}${key}`); if(el) el.value=value; });
+                        nbaShowLogoPreview('Home'); nbaShowLogoPreview('Away');
                     });
                     // Si existe un borrador, tiene prioridad sobre los datos publicados.
                     restoreNbaFeaturedDraft();
@@ -700,7 +733,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
                     const get = suffix => document.getElementById(`nbaF${slot}${suffix}`).value.trim();
                     const home=get('Home'), away=get('Away'), date=get('Date'), homeLogo=get('HomeLogo'), awayLogo=get('AwayLogo'), desc=get('Desc');
                     if (!home || !away || home===away || !date) { alert('Selecciona dos equipos distintos y agrega fecha y hora.'); return; }
-                    for (const [label,url] of [['escudo local',homeLogo],['escudo visitante',awayLogo]]) if (url && !nbaSafeImage(url)) { alert('La URL del '+label+' debe comenzar con http:// o https://'); return; }
+                    for (const [label,url] of [['escudo local',homeLogo],['escudo visitante',awayLogo]]) if (url && !nbaSafeImage(url)) { alert('El '+label+' debe ser una URL http(s) válida o una imagen seleccionada desde tu computadora.'); return; }
                     const payload={slot,home_team:home,away_team:away,home_logo_url:homeLogo||null,away_logo_url:awayLogo||null,match_datetime:new Date(date).toISOString(),description:desc||null};
                     const {error}=await supabaseClient.from(NBA_FEATURED_TABLE).upsert(payload,{onConflict:'slot'});
                     if(error){alert('No se pudo publicar: '+error.message);return;}
@@ -735,8 +768,12 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
                     ['Home','Away','HomeLogo','AwayLogo','Date','Desc'].forEach(key => {
                         const el = document.getElementById('nbaF1' + key);
                         if (!el) return;
-                        el.addEventListener('input', saveNbaFeaturedDraft);
+                        el.addEventListener('input', () => { saveNbaFeaturedDraft(); if (key.endsWith('Logo')) nbaShowLogoPreview(key === 'HomeLogo' ? 'Home' : 'Away'); });
                         el.addEventListener('change', saveNbaFeaturedDraft);
+                    });
+                    ['Home','Away'].forEach(side => {
+                        const fileInput = document.getElementById('nbaF1' + side + 'LogoFile');
+                        if (fileInput) fileInput.addEventListener('change', () => nbaReadLogoFile(fileInput.files && fileInput.files[0], side));
                     });
                     document.addEventListener('visibilitychange', () => {
                         if (document.visibilityState === 'hidden') saveNbaFeaturedDraft();
