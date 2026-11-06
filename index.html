@@ -336,6 +336,30 @@ canvas{filter:saturate(.82)}
             </div>
 
           </div>
+          <div id="nbaStatsAdmin" class="hidden mt-4 rounded-xl border border-emerald-400/20 bg-gray-900/60 p-4 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div><h4 class="text-sm font-bold text-emerald-300">Estadísticas de equipos NBA</h4><p class="text-xs text-gray-400">Carga o actualiza los datos que utiliza la calculadora.</p></div>
+              <span class="text-[10px] text-gray-500">30 equipos</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div class="sm:col-span-2"><label class="block text-[10px] text-gray-400 mb-1">Equipo</label><select id="nbaStatsTeam" class="w-full text-xs p-2 rounded-lg bg-gray-950 border border-gray-700"></select></div>
+              <div><label class="block text-[10px] text-gray-400 mb-1">Temporada</label><input id="nbaStatsSeason" type="text" placeholder="2026-27" class="w-full text-xs p-2 rounded-lg bg-gray-950 border border-gray-700"></div>
+              <div><label class="block text-[10px] text-gray-400 mb-1">Juegos en casa</label><input id="nbaGamesHome" type="number" min="1" step="1" placeholder="Ej. 5" class="w-full text-xs p-2 rounded-lg bg-gray-950 border border-gray-700"></div>
+              <div><label class="block text-[10px] text-gray-400 mb-1">Puntos a favor (casa)</label><input id="nbaPFHome" type="number" min="1" step="0.1" placeholder="Ej. 114.5" class="w-full text-xs p-2 rounded-lg bg-gray-950 border border-gray-700"></div>
+              <div><label class="block text-[10px] text-gray-400 mb-1">Puntos en contra (casa)</label><input id="nbaPCHome" type="number" min="1" step="0.1" placeholder="Ej. 110.2" class="w-full text-xs p-2 rounded-lg bg-gray-950 border border-gray-700"></div>
+              <div><label class="block text-[10px] text-gray-400 mb-1">Pace (casa)</label><input id="nbaPaceHome" type="number" min="1" step="0.1" placeholder="Ej. 99.5" class="w-full text-xs p-2 rounded-lg bg-gray-950 border border-gray-700"></div>
+              <div><label class="block text-[10px] text-gray-400 mb-1">Puntos a favor (visita)</label><input id="nbaPFAway" type="number" min="1" step="0.1" placeholder="Ej. 111.8" class="w-full text-xs p-2 rounded-lg bg-gray-950 border border-gray-700"></div>
+              <div><label class="block text-[10px] text-gray-400 mb-1">Puntos en contra (visita)</label><input id="nbaPCAway" type="number" min="1" step="0.1" placeholder="Ej. 113.1" class="w-full text-xs p-2 rounded-lg bg-gray-950 border border-gray-700"></div>
+              <div><label class="block text-[10px] text-gray-400 mb-1">Pace (visita)</label><input id="nbaPaceAway" type="number" min="1" step="0.1" placeholder="Ej. 98.7" class="w-full text-xs p-2 rounded-lg bg-gray-950 border border-gray-700"></div>
+              <div><label class="block text-[10px] text-gray-400 mb-1">Juegos de visita</label><input id="nbaGamesAway" type="number" min="1" step="1" placeholder="Ej. 4" class="w-full text-xs p-2 rounded-lg bg-gray-950 border border-gray-700"></div>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" id="nbaLoadStats" class="text-xs px-4 py-2 rounded-lg border border-gray-600">Cargar datos existentes</button>
+              <button type="button" id="nbaSaveStats" class="text-xs px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600">Guardar / actualizar equipo</button>
+              <button type="button" id="nbaClearStats" class="text-xs px-4 py-2 rounded-lg border border-gray-600">Limpiar campos</button>
+            </div>
+            <p id="nbaStatsStatus" class="text-xs text-gray-400">Selecciona un equipo para consultar o registrar sus estadísticas.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -689,9 +713,10 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
                     panel.classList.remove('hidden');
                     document.getElementById('nbaAdminLogin').classList.toggle('hidden', logged);
                     document.getElementById('nbaAdminForms').classList.toggle('hidden', !logged);
+                    document.getElementById('nbaStatsAdmin').classList.toggle('hidden', !logged);
                     document.getElementById('nbaAdminLogout').classList.toggle('hidden', !logged);
                     if (session && !logged) setNbaAdminStatus('Esta cuenta no tiene permiso para administrar. Cierra sesión e ingresa con el correo autorizado.');
-                    else if (logged) { setNbaAdminStatus('Sesión autorizada: ' + NBA_ADMIN_EMAIL); fillNbaAdminTeamSelects(); populateNbaAdminForms(); }
+                    else if (logged) { setNbaAdminStatus('Sesión autorizada: ' + NBA_ADMIN_EMAIL); fillNbaAdminTeamSelects(); populateNbaAdminForms(); initNbaStatsAdmin(); }
                     else setNbaAdminStatus('Acceso exclusivo del administrador.');
                 }
                 const NBA_FEATURED_DRAFT_KEY = 'nba_featured_match_draft_v1';
@@ -748,11 +773,73 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
                     if(error){alert('No se pudo quitar: '+error.message);return;}
                     await loadNbaFeatured(); clearNbaFeaturedDraft(); populateNbaAdminForms(); setNbaAdminStatus('Partido destacado '+slot+' eliminado.');
                 }
+                const NBA_STATS_ADMIN_FIELDS = {
+                    season:'nbaStatsSeason', games_home:'nbaGamesHome', points_for_home:'nbaPFHome',
+                    points_against_home:'nbaPCHome', pace_home:'nbaPaceHome', games_away:'nbaGamesAway',
+                    points_for_away:'nbaPFAway', points_against_away:'nbaPCAway', pace_away:'nbaPaceAway'
+                };
+                function setNbaStatsStatus(message, error=false) {
+                    const el=document.getElementById('nbaStatsStatus');
+                    if(el){el.textContent=message;el.className='text-xs '+(error?'text-rose-300':'text-gray-400');}
+                }
+                function fillNbaStatsTeamSelect() {
+                    const select=document.getElementById('nbaStatsTeam');
+                    if(!select || select.options.length) return;
+                    select.add(new Option('Selecciona equipo NBA',''));
+                    nbaTeamNames.forEach(team=>select.add(new Option(team,team)));
+                }
+                function clearNbaStatsFields() {
+                    Object.values(NBA_STATS_ADMIN_FIELDS).forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+                    setNbaStatsStatus('Campos limpios. Selecciona un equipo y captura sus estadísticas.');
+                }
+                async function loadNbaStatsAdmin() {
+                    const team=document.getElementById('nbaStatsTeam').value;
+                    if(!team){setNbaStatsStatus('Selecciona un equipo primero.',true);return;}
+                    const {data,error}=await supabaseClient.from(NBA_TABLE).select('*').eq('team_name',team).maybeSingle();
+                    if(error){setNbaStatsStatus('No se pudieron cargar los datos: '+error.message,true);return;}
+                    if(!data){clearNbaStatsFields();setNbaStatsStatus(team+' todavía no tiene registro. Puedes capturar sus datos.');return;}
+                    Object.entries(NBA_STATS_ADMIN_FIELDS).forEach(([field,id])=>{
+                        const el=document.getElementById(id); if(el) el.value=data[field] ?? '';
+                    });
+                    setNbaStatsStatus('Datos cargados para '+team+'. Puedes modificarlos y guardar.');
+                }
+                async function saveNbaStatsAdmin() {
+                    const team=document.getElementById('nbaStatsTeam').value;
+                    if(!team){setNbaStatsStatus('Selecciona un equipo.',true);return;}
+                    const payload={team_name:team};
+                    for(const [field,id] of Object.entries(NBA_STATS_ADMIN_FIELDS)){
+                        const raw=document.getElementById(id).value.trim();
+                        if(!raw){setNbaStatsStatus('Completa todos los campos, incluida la temporada y los juegos en casa y visita.',true);return;}
+                        const value=field==='season'?raw:Number(raw);
+                        if(field!=='season' && (!Number.isFinite(value)||value<=0)){setNbaStatsStatus('Revisa los valores numéricos: todos deben ser mayores que cero.',true);return;}
+                        payload[field]=value;
+                    }
+                    const btn=document.getElementById('nbaSaveStats');btn.disabled=true;
+                    const {error}=await supabaseClient.from(NBA_TABLE).upsert(payload,{onConflict:'team_name'});
+                    btn.disabled=false;
+                    if(error){setNbaStatsStatus('No se pudo guardar: '+error.message,true);return;}
+                    setNbaStatsStatus('¡Estadísticas guardadas para '+team+'! Ya están disponibles en la calculadora.');
+                    if(document.getElementById('selectHomeTeam').value===team) loadTeamStats(team,'home');
+                    if(document.getElementById('selectAwayTeam').value===team) loadTeamStats(team,'away');
+                }
+                let nbaStatsAdminInitialized=false;
+                function initNbaStatsAdmin() {
+                    fillNbaStatsTeamSelect();
+                    if(nbaStatsAdminInitialized) return;
+                    nbaStatsAdminInitialized=true;
+                    document.getElementById('nbaLoadStats').addEventListener('click',loadNbaStatsAdmin);
+                    document.getElementById('nbaSaveStats').addEventListener('click',saveNbaStatsAdmin);
+                    document.getElementById('nbaClearStats').addEventListener('click',clearNbaStatsFields);
+                    document.getElementById('nbaStatsTeam').addEventListener('change',loadNbaStatsAdmin);
+                }
+
                 function initNbaFeaturedAdmin() {
                     const open=document.getElementById('nbaAdminSecretTrigger');
                     const toggleAdmin=async()=>{
-                        const panel=document.getElementById('nbaAdminPanel'); panel.classList.toggle('hidden');
-                        const {data}=await supabaseClient.auth.getSession(); showNbaAdmin(data?.session || null);
+                        const panel=document.getElementById('nbaAdminPanel');
+                        const willOpen=panel.classList.contains('hidden');
+                        panel.classList.toggle('hidden',!willOpen);
+                        if(willOpen){const {data}=await supabaseClient.auth.getSession();showNbaAdmin(data?.session || null);}
                     };
                     open.addEventListener('click',toggleAdmin);
                     open.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleAdmin();}});
