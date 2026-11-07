@@ -1422,7 +1422,13 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
                     open.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleAdmin();}});
                     document.getElementById('nbaSendLogin').addEventListener('click',async()=>{
                         const btn=document.getElementById('nbaSendLogin'); btn.disabled=true;
-                        const {error}=await supabaseClient.auth.signInWithOtp({email:NBA_ADMIN_EMAIL,options:{emailRedirectTo:window.location.href,shouldCreateUser:false}});
+                       const {error}=await supabaseClient.auth.signInWithOtp({
+  email:NBA_ADMIN_EMAIL,
+  options:{
+    emailRedirectTo:'https://7gamesgalaxy-sudo.github.io/nba/',
+    shouldCreateUser:false
+  }
+});
                         btn.disabled=false;
                         if(error){setNbaAdminStatus('No se pudo enviar el enlace: '+error.message);return;}
                         setNbaAdminStatus('Enlace enviado a '+NBA_ADMIN_EMAIL+'. Abre tu correo en este dispositivo para iniciar sesión.');
@@ -1433,7 +1439,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
                         const el = document.getElementById('nbaF1' + key);
                         if (!el) return;
                         el.addEventListener('input', () => { saveNbaFeaturedDraft(); if (key.endsWith('Logo')) nbaShowLogoPreview(key === 'HomeLogo' ? 'Home' : 'Away'); });
-                        el.addEventListener('change', saveNbaFeaturedDraft);
+                        el.addEventListener('change', saveNbaFeauredDraft);
                     });
                     ['Home','Away'].forEach(side => {
                         const fileInput = document.getElementById('nbaF1' + side + 'LogoFile');
