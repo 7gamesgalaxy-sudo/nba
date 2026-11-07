@@ -4655,6 +4655,168 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
   else start();
 })();
 </script>
+
+<style id="p23-affiliate-pulse-style">
+.p23-affiliate-anchor{position:relative!important;display:inline-flex!important;align-items:center;gap:7px;flex-wrap:wrap;vertical-align:middle}
+.p23-affiliate-pulse{animation:p23ProbabilityPulse .78s cubic-bezier(.2,.85,.25,1) 1}
+@keyframes p23ProbabilityPulse{0%{transform:scale(1)}35%{transform:scale(1.22);filter:drop-shadow(0 0 13px rgba(236,190,112,.8))}68%{transform:scale(.96)}100%{transform:scale(1);filter:none}}
+.p23-affiliate-bubble{position:relative;display:inline-flex;align-items:center;gap:7px;max-width:220px;padding:6px 9px;border:1px solid rgba(224,185,117,.45);border-radius:10px;background:linear-gradient(135deg,rgba(29,43,54,.96),rgba(8,19,31,.96));box-shadow:0 7px 18px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.13);color:#f4e7c9!important;font:700 9px/1.25 Manrope,Arial,sans-serif;letter-spacing:.025em;text-decoration:none;opacity:0;transform:translateY(5px) scale(.96);animation:p23BubbleIn .32s ease forwards;z-index:5}
+.p23-affiliate-bubble:before{content:"";position:absolute;left:13px;top:-5px;width:8px;height:8px;background:#1b2a36;border-left:1px solid rgba(224,185,117,.45);border-top:1px solid rgba(224,185,117,.45);transform:rotate(45deg)}
+.p23-affiliate-bubble:hover{border-color:rgba(245,213,157,.8);box-shadow:0 8px 22px rgba(0,0,0,.35),0 0 13px rgba(224,185,117,.15)}
+.p23-affiliate-mark{width:23px;height:23px;min-width:23px;display:grid;place-items:center;border-radius:7px;background:linear-gradient(145deg,#f1d49b,#9c6b36);color:#18202a!important;font:900 9px/1 Cinzel,Georgia,serif;box-shadow:inset 0 1px 1px #fff8}
+.p23-affiliate-copy{display:flex;flex-direction:column;gap:2px;min-width:0}
+.p23-affiliate-copy strong{font-size:9px;color:#f5dba9!important;white-space:nowrap}
+.p23-affiliate-copy small{font-size:8px;color:#c3cbd1!important;font-weight:600}
+.p23-affiliate-disclosure{font-size:7px;color:rgba(235,245,248,.72)!important;font-weight:500}
+
+/* Acabado cristal: más redondo, ligero y translúcido */
+.p23-affiliate-bubble{
+  max-width:218px;
+  padding:7px 11px;
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(16,31,39,.42),rgba(7,17,26,.24))!important;
+  backdrop-filter:blur(12px) saturate(155%);
+  -webkit-backdrop-filter:blur(12px) saturate(155%);
+  box-shadow:0 6px 18px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.18);
+}
+.p23-affiliate-bubble:before{
+  background:rgba(13,27,34,.46)!important;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+.p23-affiliate-bubble.p23-neon-green{border-color:rgba(57,255,146,.62);box-shadow:0 5px 17px rgba(0,0,0,.15),0 0 11px rgba(57,255,146,.14),inset 0 1px 0 rgba(255,255,255,.2)}
+.p23-affiliate-bubble.p23-neon-green:before{border-color:rgba(57,255,146,.62)}
+.p23-affiliate-bubble.p23-neon-green .p23-affiliate-mark{background:rgba(57,255,146,.16);border:1px solid rgba(57,255,146,.5);color:#9affc8!important;box-shadow:0 0 10px rgba(57,255,146,.16)}
+.p23-affiliate-bubble.p23-neon-green .p23-affiliate-copy strong{color:#9affc8!important}
+.p23-affiliate-bubble.p23-neon-yellow{border-color:rgba(255,230,75,.65);box-shadow:0 5px 17px rgba(0,0,0,.15),0 0 11px rgba(255,230,75,.14),inset 0 1px 0 rgba(255,255,255,.2)}
+.p23-affiliate-bubble.p23-neon-yellow:before{border-color:rgba(255,230,75,.65)}
+.p23-affiliate-bubble.p23-neon-yellow .p23-affiliate-mark{background:rgba(255,230,75,.15);border:1px solid rgba(255,230,75,.5);color:#fff39a!important;box-shadow:0 0 10px rgba(255,230,75,.14)}
+.p23-affiliate-bubble.p23-neon-yellow .p23-affiliate-copy strong{color:#fff39a!important}
+.p23-affiliate-bubble.p23-neon-red{border-color:rgba(255,75,105,.65);box-shadow:0 5px 17px rgba(0,0,0,.15),0 0 11px rgba(255,75,105,.14),inset 0 1px 0 rgba(255,255,255,.2)}
+.p23-affiliate-bubble.p23-neon-red:before{border-color:rgba(255,75,105,.65)}
+.p23-affiliate-bubble.p23-neon-red .p23-affiliate-mark{background:rgba(255,75,105,.15);border:1px solid rgba(255,75,105,.5);color:#ff9eaf!important;box-shadow:0 0 10px rgba(255,75,105,.14)}
+.p23-affiliate-bubble.p23-neon-red .p23-affiliate-copy strong{color:#ff9eaf!important}
+.p23-affiliate-bubble:hover{background:linear-gradient(135deg,rgba(20,38,46,.58),rgba(8,18,27,.38))!important}
+@keyframes p23BubbleIn{to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:640px){.p23-affiliate-bubble{max-width:185px;padding:5px 7px}.p23-affiliate-anchor{gap:5px}}
+@media(prefers-reduced-motion:reduce){.p23-affiliate-pulse,.p23-affiliate-bubble{animation:none!important;opacity:1;transform:none}}
+</style>
+<script id="p23-affiliate-probability-recommendations">
+(function(){
+  'use strict';
+  const THRESHOLD = 81;
+  const partners = [
+    {name:'NOVIBET', mark:'N', url:'https://bdeal.io/novibet/163501/1'},
+    {name:'CODERE', mark:'C', url:'https://bdeal.io/codere/163500/1'},
+    {name:'SPORTIUM', mark:'S', url:'https://bdeal.io/sportium/163502/1'},
+    {name:'LOCOWIN', mark:'L', url:'https://xwin.to/locowin/165094/1'}
+  ];
+  let rotation = 0;
+  const seen = new WeakMap();
+  const pending = new WeakSet();
+
+  function readPercent(node){
+    const match = (node.textContent || '').replace(',', '.').match(/(\d+(?:\.\d+)?)\s*%/);
+    return match ? Number(match[1]) : NaN;
+  }
+  function showRecommendation(node, stamp){
+    if(!node || !node.isConnected || node.textContent.trim() !== stamp) return;
+    const anchor = node.parentElement;
+    if(!anchor) return;
+    const old = anchor.querySelector(':scope > .p23-affiliate-bubble');
+    if(old) old.remove();
+
+    const partner = partners[rotation++ % partners.length];
+    anchor.classList.add('p23-affiliate-anchor');
+
+    const link = document.createElement('a');
+    link.className = 'p23-affiliate-bubble';
+    link.classList.add(['p23-neon-green','p23-neon-yellow','p23-neon-red'][(rotation - 1) % 3]);
+    link.href = partner.url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer sponsored';
+    link.setAttribute('aria-label', 'Promoción de afiliado de ' + partner.name + '. Solo mayores de 18 años.');
+    link.innerHTML = '<span class="p23-affiliate-mark" aria-hidden="true">'+partner.mark+'</span>'+
+      '<span class="p23-affiliate-copy"><strong>¡Pssst! '+partner.name+'</strong>'+
+      '<small>Promoción para este mercado</small><span class="p23-affiliate-disclosure">Enlace afiliado · +18 · </span></span>';
+    node.insertAdjacentElement('afterend', link);
+  }
+  function addRecommendation(node){
+    if(!node || !node.isConnected) return;
+    const value = readPercent(node);
+    const anchor = node.parentElement;
+    if(!Number.isFinite(value) || value <= THRESHOLD){
+      const old = anchor && anchor.querySelector(':scope > .p23-affiliate-bubble');
+      if(old) old.remove();
+      node.classList.remove('p23-affiliate-pulse');
+      pending.delete(node);
+      return;
+    }
+    const stamp = node.textContent.trim();
+    if(seen.get(node) === stamp && (pending.has(node) || (anchor && anchor.querySelector(':scope > .p23-affiliate-bubble')))) return;
+    seen.set(node, stamp);
+    if(!anchor) return;
+    const old = anchor.querySelector(':scope > .p23-affiliate-bubble');
+    if(old) old.remove();
+
+    // Secuencia intencional: primero termina el rebote del porcentaje;
+    // solo entonces se revela la burbuja de recomendación.
+    pending.add(node);
+    node.classList.remove('p23-affiliate-pulse');
+    void node.offsetWidth;
+    node.classList.add('p23-affiliate-pulse');
+
+    let finished = false;
+    const reveal = () => {
+      if(finished) return;
+      finished = true;
+      node.removeEventListener('animationend', onAnimationEnd);
+      pending.delete(node);
+      if(!node.isConnected || node.textContent.trim() !== stamp) return;
+      showRecommendation(node, stamp);
+    };
+    const onAnimationEnd = event => {
+      if(event.target === node && event.animationName === 'p23ProbabilityPulse') reveal();
+    };
+    node.addEventListener('animationend', onAnimationEnd);
+    // Respaldo por si el navegador no dispara animationend.
+    setTimeout(reveal, 900);
+  }
+  function scan(){
+    // 1X2 markets
+    ['prob1','probX','prob2'].forEach(id=>addRecommendation(document.getElementById(id)));
+    // All Over/Under lines, both sides
+    document.querySelectorAll('#p23OuLines .p23-ou-pct').forEach(addRecommendation);
+    // Probability matrix, only percentage cells (not labels)
+    document.querySelectorAll('#matrixTableBody td').forEach(cell=>{
+      if(/%/.test(cell.textContent || '')) addRecommendation(cell);
+    });
+  }
+  function scheduleScan(){
+    requestAnimationFrame(()=>requestAnimationFrame(scan));
+  }
+  function init(){
+    scheduleScan();
+    const targets = [
+      document.getElementById('prob1'),
+      document.getElementById('probX'),
+      document.getElementById('prob2'),
+      document.getElementById('p23OuLines'),
+      document.getElementById('matrixTableBody')
+    ].filter(Boolean);
+    if(window.MutationObserver){
+      const observer = new MutationObserver(scheduleScan);
+      targets.forEach(target=>observer.observe(target,{childList:true,subtree:true,characterData:true}));
+    }
+    // The model writes the 1X2 values directly, so also rescan after its render cycle.
+    document.getElementById('selectHomeTeam')?.addEventListener('change',()=>setTimeout(scheduleScan,80));
+    document.getElementById('selectAwayTeam')?.addEventListener('change',()=>setTimeout(scheduleScan,80));
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init,{once:true});
+  else init();
+})();
+</script>
+
 </body>
 
 <script async="async" data-cfasync="false" src="https://bauval.org/21/433d3388ed1223fa8b7f649b658e6e55"></script>
