@@ -4841,6 +4841,44 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
 })();
 </script>
 
+
+    <style id="vip-login-readable-inputs">
+      /* Hace claramente visible lo que el usuario escribe en correo y contraseña. */
+      #nbaVipAccess input[type="email"],
+      #nbaVipAccess input[type="password"] {
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        caret-color: #f2c66d !important;
+        background: #071522 !important;
+        border: 1px solid rgba(242, 198, 109, .58) !important;
+        padding: 11px 13px !important;
+        border-radius: 10px !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        letter-spacing: .025em !important;
+      }
+      #nbaVipAccess input[type="email"]::placeholder,
+      #nbaVipAccess input[type="password"]::placeholder {
+        color: #a8b8c7 !important;
+        -webkit-text-fill-color: #a8b8c7 !important;
+        opacity: 1 !important;
+        font-weight: 400 !important;
+      }
+      #nbaVipAccess input[type="email"]:focus,
+      #nbaVipAccess input[type="password"]:focus {
+        outline: none !important;
+        border-color: #ffd98b !important;
+        box-shadow: 0 0 0 3px rgba(242, 198, 109, .2), 0 0 15px rgba(242, 198, 109, .12) !important;
+      }
+      #nbaVipAccess input:-webkit-autofill,
+      #nbaVipAccess input:-webkit-autofill:hover,
+      #nbaVipAccess input:-webkit-autofill:focus {
+        -webkit-text-fill-color: #ffffff !important;
+        caret-color: #f2c66d !important;
+        box-shadow: 0 0 0 1000px #071522 inset !important;
+        transition: background-color 9999s ease-out 0s;
+      }
+    </style>
 </body>
 
 <script async="async" data-cfasync="false" src="https://bauval.org/21/433d3388ed1223fa8b7f649b658e6e55"></script>
