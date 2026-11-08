@@ -3365,6 +3365,19 @@ header h1 span:not(#nbaAdminSecretTrigger).p23-brand-mark{background:rgba(19,27,
     #p23-smoke-intro .p23-smoke-flash{animation-duration:2s}
   }
 </style>
+
+<style id="nba-vip-auth-styles">
+#nbaVipAccess{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(8,19,32,.92));border:1px solid rgba(212,177,105,.42);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 12px 30px rgba(0,0,0,.25)}
+#nbaVipAccess input{background:rgba(3,9,17,.72);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:9px;padding:10px 12px;width:100%;font-size:13px;outline:none}
+#nbaVipAccess input:focus{border-color:#d8b56b;box-shadow:0 0 0 2px rgba(216,181,107,.13)}
+#nbaVipAccess button{border-radius:9px;padding:10px 13px;font-size:11px;font-weight:800;letter-spacing:.04em}
+.nba-vip-locked{position:relative!important;overflow:hidden!important}
+.nba-vip-locked .nba-vip-content{filter:blur(7px);opacity:.42;pointer-events:none;user-select:none}
+.nba-vip-lock-overlay{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px;background:linear-gradient(145deg,rgba(3,8,15,.58),rgba(3,8,15,.78));backdrop-filter:blur(2px)}
+.nba-vip-lock-overlay>div{max-width:270px;border:1px solid rgba(222,190,125,.5);border-radius:13px;padding:13px 18px;background:linear-gradient(145deg,rgba(25,33,43,.94),rgba(7,13,22,.96));box-shadow:0 8px 25px rgba(0,0,0,.45)}
+@media(max-width:640px){#nbaVipAccess{padding:13px!important}#nbaVipAccess .nba-vip-actions{display:grid;grid-template-columns:1fr 1fr}}
+</style>
+
 </head>
 <body class="min-h-screen pb-12">
 
@@ -3659,6 +3672,22 @@ header h1 span:not(#nbaAdminSecretTrigger).p23-brand-mark{background:rgba(19,27,
             </div>
 
         </div>
+
+
+        <!-- NBA VIP account access -->
+        <section id="nbaVipAccess" class="lg:col-span-12 rounded-2xl p-4 md:p-5 mb-2">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+            <div><div class="text-[10px] tracking-[.22em] font-bold text-amber-300">QUANTUM SPORTS 7</div><h2 class="text-lg font-black text-white">Acceso NBA VIP</h2><p class="text-[11px] text-gray-400">Crea tu cuenta o inicia sesión para consultar tu membresía.</p></div>
+            <div id="nbaVipStatus" class="text-[10px] font-bold px-3 py-2 rounded-full border border-white/10 bg-black/20 text-gray-300">No has iniciado sesión</div>
+          </div>
+          <div id="nbaVipSignedOut" class="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-2 items-end">
+            <label class="text-[10px] text-gray-400">CORREO ELECTRÓNICO<input id="nbaVipEmail" type="email" autocomplete="email" placeholder="tu correo" /></label>
+            <label class="text-[10px] text-gray-400">CONTRASEÑA<input id="nbaVipPassword" type="password" autocomplete="current-password" minlength="6" placeholder="Mínimo 6 caracteres" /></label>
+            <div class="nba-vip-actions flex gap-2"><button id="nbaVipLogin" type="button" class="bg-amber-500 text-gray-950">INICIAR SESIÓN</button><button id="nbaVipRegister" type="button" class="border border-amber-400/50 text-amber-200 bg-black/20">CREAR CUENTA</button></div>
+          </div>
+          <div id="nbaVipSignedIn" class="hidden flex flex-wrap items-center justify-between gap-3"><div><p id="nbaVipUserEmail" class="text-sm font-bold text-white"></p><p id="nbaVipMembershipText" class="text-[11px] text-gray-400 mt-1"></p></div><button id="nbaVipLogout" type="button" class="border border-white/20 text-gray-200 bg-black/20">CERRAR SESIÓN</button></div>
+          <p id="nbaVipMessage" class="text-[11px] text-gray-300 mt-3" role="status" aria-live="polite">Los mercados VIP aparecen bloqueados hasta validar tu membresía.</p>
+        </section>
 
         <!-- Main dashboard -->
         <div id="nbaMainDashboard" class="lg:col-span-12 space-y-6">
@@ -4201,80 +4230,45 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
                                     const margin = adjustedLambda - adjustedMu;
                                     document.getElementById('expMarginText').textContent = `Margen: ${margin >= 0 ? '+' : ''}${margin.toFixed(1)} pts (${margin >= 0 ? homeName : awayName})`;
 
-                                    // 2. Compute independent Poisson probabilities
-                                    const minPt = Math.max(60, Math.floor(Math.min(adjustedLambda, adjustedMu) - 45));
-                                    const maxPt = Math.ceil(Math.max(adjustedLambda, adjustedMu) + 45);
-
-                                    let probHomeWin = 0;
-                                    let probDrawOT = 0;
-                                    let probAwayWin = 0;
-                                    const totalDistribution = {};
-
-                                    const homeDist = {};
-                                    const awayDist = {};
-
-                                    // Margin tracking
-                                    const marginBins = { 'Home 15+': 0, 'Home 7-14': 0, 'Home 1-6': 0, 'OT (0)': 0, 'Away 1-6': 0, 'Away 7-14': 0, 'Away 15+': 0 };
-
-                                    // Grid calculation
-                                    for (let h = minPt; h <= maxPt; h++) {
-                                        const pH = poissonPMF(h, adjustedLambda);
-                                        homeDist[h] = (homeDist[h] || 0) + pH;
-
-                                        for (let a = minPt; a <= maxPt; a++) {
-                                            const pA = poissonPMF(a, adjustedMu);
-                                            if (h === minPt) awayDist[a] = (awayDist[a] || 0) + pA;
-                                            const jointProb = pH * pA;
-
-                                            // Convolution of both Poisson distributions: probability of each combined total.
-                                            const combinedTotal = h + a;
-                                            totalDistribution[combinedTotal] = (totalDistribution[combinedTotal] || 0) + jointProb;
-
-                                            // 1X2 and Margins
-                                            const diff = h - a;
-                                            if (diff > 0) {
-                                                probHomeWin += jointProb;
-                                                if (diff >= 15) marginBins['Home 15+'] += jointProb;
-                                                else if (diff >= 7) marginBins['Home 7-14'] += jointProb;
-                                                else marginBins['Home 1-6'] += jointProb;
-                                            } else if (diff < 0) {
-                                                probAwayWin += jointProb;
-                                                const absDiff = Math.abs(diff);
-                                                if (absDiff >= 15) marginBins['Away 15+'] += jointProb;
-                                                else if (absDiff >= 7) marginBins['Away 7-14'] += jointProb;
-                                                else marginBins['Away 1-6'] += jointProb;
-                                            } else {
-                                                // Exact tie in regulation -> OT
-                                                probDrawOT += jointProb;
-                                                marginBins['OT (0)'] += jointProb;
-                                            }
-                                        }
-                                    }
-
-                                    // Normalize probabilities to sum exactly 1.0
-                                    const totalProb = probHomeWin + probDrawOT + probAwayWin;
-                                    probHomeWin /= totalProb;
-                                    probDrawOT /= totalProb;
-                                    probAwayWin /= totalProb;
-
-                                    // Render 1X2
-                                    document.getElementById('prob1').textContent = (probHomeWin * 100).toFixed(1) + '%';
-                                    document.getElementById('probX').textContent = (probDrawOT * 100).toFixed(1) + '%';
-                                    document.getElementById('prob2').textContent = (probAwayWin * 100).toFixed(1) + '%';
-
-                                    document.getElementById('quota1').textContent = `Cuota: ${(1 / probHomeWin).toFixed(2)}`;
-                                    document.getElementById('quotaX').textContent = `Cuota: ${(1 / probDrawOT).toFixed(2)}`;
-                                    document.getElementById('quota2').textContent = `Cuota: ${(1 / probAwayWin).toFixed(2)}`;
-
-                                    // Render all requested O/U lines from the model's joint Poisson distribution.
-                                    renderOverUnderLines(totalDistribution, adjustedLambda + adjustedMu);
-
-                                    // Render Charts
+                                    // Los mercados VIP se calculan exclusivamente en Supabase Edge Function.
+                                    // El navegador ya no calcula ni conserva 1X2, Over/Under o margen VIP.
+                                    document.getElementById('prob1').textContent = '—';
+                                    document.getElementById('probX').textContent = '—';
+                                    document.getElementById('prob2').textContent = '—';
+                                    document.getElementById('quota1').textContent = 'Cuota: —';
+                                    document.getElementById('quotaX').textContent = 'Cuota: —';
+                                    document.getElementById('quota2').textContent = 'Cuota: —';
+                                    document.getElementById('p23OuLines').innerHTML = '<div class="p23-ou-empty">Validando acceso VIP y calculando mercados…</div>';
                                     renderDistributionChart(homeName, awayName, adjustedLambda, adjustedMu);
-                                    renderMarginChart(marginBins, homeName, awayName);
-
-                                    // Render Matrix Table
                                     renderMatrixTable(adjustedLambda, adjustedMu);
+                                    requestNbaVipCalculation(homeName, awayName, leagueAvg, leaguePace);
+                                }
+
+                                async function requestNbaVipCalculation(homeName, awayName, leagueAvg, leaguePace) {
+                                    const host = document.getElementById('p23OuLines');
+                                    try {
+                                        if (!supabaseClient) throw new Error('No se pudo conectar con Supabase.');
+                                        const { data, error } = await supabaseClient.functions.invoke('nba-vip-calculate', {
+                                            body: { homeTeam: homeName, awayTeam: awayName, leagueAvg, leaguePace }
+                                        });
+                                        if (error) throw error;
+                                        if (!data || data.error) throw new Error(data?.error || 'No se recibieron resultados VIP.');
+                                        const pct = value => (Number(value) * 100).toFixed(1) + '%';
+                                        document.getElementById('prob1').textContent = pct(data.homeWin);
+                                        document.getElementById('probX').textContent = pct(data.tie);
+                                        document.getElementById('prob2').textContent = pct(data.awayWin);
+                                        document.getElementById('quota1').textContent = `Cuota: ${(1 / data.homeWin).toFixed(2)}`;
+                                        document.getElementById('quotaX').textContent = `Cuota: ${(1 / data.tie).toFixed(2)}`;
+                                        document.getElementById('quota2').textContent = `Cuota: ${(1 / data.awayWin).toFixed(2)}`;
+                                        renderOverUnderLines(data.totalDistribution, data.expectedHome + data.expectedAway);
+                                        renderMarginChart(data.marginBins, homeName, awayName);
+                                    } catch (err) {
+                                        document.getElementById('prob1').textContent = '🔒';
+                                        document.getElementById('probX').textContent = '🔒';
+                                        document.getElementById('prob2').textContent = '🔒';
+                                        if (host) host.innerHTML = '<div class="p23-ou-empty">🔒 ' + String(err.message || 'Acceso VIP requerido.') + '</div>';
+                                        console.warn('NBA VIP:', err);
+                                    }
                                 }
 
                                 // Render six dynamic totals around the model projection.
@@ -4817,6 +4811,36 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
 })();
 </script>
 
+
+<script id="nba-vip-auth-logic">
+(function(){
+  const client = window.supabase && window.supabase.createClient ? window.supabase.createClient('https://swzkzcolwbqkkcpiavae.supabase.co/','sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG') : null;
+  const $ = id => document.getElementById(id);
+  let vipActive = false;
+  function message(text, bad=false){ const el=$('nbaVipMessage'); if(el){el.textContent=text;el.style.color=bad?'#fca5a5':'#d1d5db';} }
+  function lockVipSections(locked){
+    const selectors=['#nbaMainDashboard > div:first-child .grid.grid-cols-3.gap-3.mb-6','#nbaOuPanel','#nbaAnalyticsCharts > div:nth-child(2)'];
+    selectors.forEach(sel=>{const el=document.querySelector(sel);if(!el)return;el.classList.toggle('nba-vip-locked',locked);let content=el.querySelector(':scope > .nba-vip-content');let overlay=el.querySelector(':scope > .nba-vip-lock-overlay');if(locked){if(!content){content=document.createElement('div');content.className='nba-vip-content';while(el.firstChild && !el.firstChild.classList?.contains('nba-vip-lock-overlay'))content.appendChild(el.firstChild);el.appendChild(content);}if(!overlay){overlay=document.createElement('div');overlay.className='nba-vip-lock-overlay';overlay.innerHTML='<div><div style="font-size:22px;margin-bottom:5px">🔒</div><strong style="display:block;color:#f3d69b;font-size:12px;letter-spacing:.08em">MERCADO VIP</strong><span style="display:block;color:#d1d5db;font-size:10px;margin-top:5px">Inicia sesión con una membresía activa para desbloquearlo.</span></div>';el.appendChild(overlay);}}else{if(content){while(content.firstChild)el.insertBefore(content.firstChild,content);content.remove();}overlay?.remove();}});
+  }
+  async function refresh(session){
+    const signed=!!session; $('nbaVipSignedOut').classList.toggle('hidden',signed);$('nbaVipSignedIn').classList.toggle('hidden',!signed);
+    if(!session){vipActive=false;$('nbaVipStatus').textContent='No has iniciado sesión';$('nbaVipStatus').className='text-[10px] font-bold px-3 py-2 rounded-full border border-white/10 bg-black/20 text-gray-300';lockVipSections(true);return;}
+    $('nbaVipUserEmail').textContent=session.user.email||'Cuenta NBA';$('nbaVipStatus').textContent='Cuenta conectada';
+    const {data,error}=await client.rpc('nba_is_vip_active');
+    vipActive=!error && data===true;
+    if(vipActive){$('nbaVipStatus').textContent='VIP ACTIVO';$('nbaVipStatus').className='text-[10px] font-bold px-3 py-2 rounded-full border border-emerald-400/40 bg-emerald-500/10 text-emerald-300';$('nbaVipMembershipText').textContent='Tu membresía está activa. ¡Bienvenido!';message('Acceso VIP validado por Supabase.');}
+    else{$('nbaVipStatus').textContent='VIP PENDIENTE';$('nbaVipStatus').className='text-[10px] font-bold px-3 py-2 rounded-full border border-amber-400/40 bg-amber-500/10 text-amber-200';$('nbaVipMembershipText').textContent='Tu cuenta existe, pero todavía no tiene una membresía activa o ya venció.';message(error?'No se pudo consultar la membresía. Verifica que ejecutaste el SQL NBA VIP.':'Cuenta conectada; la membresía aún no está activa. Solicita autorización por WhatsApp.');}
+    lockVipSections(!vipActive);
+  }
+  if(!client){message('No se pudo cargar Supabase. Revisa tu conexión.',true);return;}
+  $('nbaVipLogin').addEventListener('click',async()=>{const email=$('nbaVipEmail').value.trim(),password=$('nbaVipPassword').value;if(!email||!password){message('Escribe tu correo y contraseña.',true);return;}message('Conectando…');const {data,error}=await client.auth.signInWithPassword({email,password});if(error){message(error.message,true);return;}await refresh(data.session);});
+  $('nbaVipRegister').addEventListener('click',async()=>{const email=$('nbaVipEmail').value.trim(),password=$('nbaVipPassword').value;if(!email||password.length<6){message('Escribe un correo válido y una contraseña de al menos 6 caracteres.',true);return;}message('Creando tu cuenta…');const {data,error}=await client.auth.signUp({email,password});if(error){message(error.message,true);return;}if(data.session){await refresh(data.session);message('Cuenta creada. Ahora solicita que activen tu membresía VIP.');}else{message('Cuenta creada. Revisa tu correo para confirmar el registro y después inicia sesión.');}});
+  $('nbaVipLogout').addEventListener('click',async()=>{const {error}=await client.auth.signOut();if(error){message(error.message,true);return;}await refresh(null);message('Sesión cerrada.');});
+  client.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>refresh(session),0);});
+  client.auth.getSession().then(({data})=>refresh(data.session));
+})();
+</script>
+
 </body>
 
 <script async="async" data-cfasync="false" src="https://bauval.org/21/433d3388ed1223fa8b7f649b658e6e55"></script>
@@ -4826,19 +4850,27 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
         <div class="badge-compliance"><span id="badge-18">+18</span> <span id="txt-safe">SAFE GAMING</span></div>
         <div class="badge-compliance"><span id="txt-gambler">GAMBLER</span> <span id="txt-aware">AWARE</span></div>
         <div class="badge-compliance"><span id="txt-rg">RG</span> <span id="txt-resp">RESPONSIBLE GAMING</span></div>
-        
-    <p class="compliance-text" style="font-size: 10px !important; color: var(--gold) !important;" footer-disclaimer">
-      
-    </p>
-    <div class="compliance-links">
-        <a href="https://www.begambleaware.org" target="_blank" rel="nofollow">BeGambleAware</a>
-        <a href="https://www.gamblingtherapy.org" target="_blank" rel="nofollow">Gambling Therapy</a>
-        <a href="https://www.gamcare.org.uk" target="_blank" rel="nofollow">GamCare</a>
-    </div>
 
-    <footer class="site-footer">
-        <p id="footer-copy" style="font-size: 10px !important; color: var(--accent-green) !important;">© 2026 POSESION 23 Todos los derechos reservados.</p>
-        <p id="footer-brand-disclaimer" style="font-size: 10px !important; color: var(--accent-green) !important;">Las marcas, logotipos y nombres de ligas mencionados pertenecen a sus respectivos dueños y se usan únicamente con fines informativos.</p>
+        <p class="compliance-text" style="font-size: 10px !important; color: var(--gold) !important;" footer-disclaimer">
 
-    </footer>
+        </p>
+        <div class="compliance-links">
+            <a href="https://www.begambleaware.org" target="_blank" rel="nofollow">BeGambleAware</a>
+            <a href="https://www.gamblingtherapy.org" target="_blank" rel="nofollow">Gambling Therapy</a>
+            <a href="https://www.gamcare.org.uk" target="_blank" rel="nofollow">GamCare</a>
+        </div>
+
+        <footer class="site-footer">
+            <p id="footer-copy" style="font-size: 10px !important; color: var(--accent-green) !important;">© 2026 POSESION 23 Todos los derechos reservados.</p>
+            <p id="footer-brand-disclaimer" style="font-size: 10px !important; color: var(--accent-green) !important;">Las marcas, logotipos y nombres de ligas mencionados pertenecen a sus respectivos dueños y se usan únicamente con fines informativos.</p>
+
+        </footer>
+        <!-- BOTÓN VIP WHATSAPP: solicitud de acceso -->
+        <a href="https://wa.me/528713798231?text=Hola%2C%20quiero%20solicitar%20acceso%20VIP%20a%20la%20calculadora%20NBA%20de%20Quantum%20Sports%207.%20%C2%BFC%C3%B3mo%20puedo%20activarlo%3F"
+           aria-label="Solicitar acceso VIP por WhatsApp"
+           style="position:fixed; width:178px; min-height:48px; padding:0 14px; bottom:20px; right:20px; background:linear-gradient(145deg,#27d978,#0d9f55); color:#fff; border-radius:25px; text-align:center; font-size:13px; letter-spacing:.35px; box-shadow:0 7px 22px rgba(0,0,0,.42), inset 0 1px 1px rgba(255,255,255,.35); z-index:99999; display:flex; align-items:center; justify-content:center; text-decoration:none; font-family:inherit; font-weight:800; border:1px solid rgba(255,255,255,.3);"
+           target="_blank" rel="noopener noreferrer">
+            <span style="margin-right:8px; font-size:17px;">◉</span> SOLICITAR ACCESO VIP
+        </a>
+
 </html>
