@@ -3329,43 +3329,6 @@ header h1 span:not(#nbaAdminSecretTrigger).p23-brand-word{background:none!import
 header h1 span:not(#nbaAdminSecretTrigger).p23-brand-23{background:none!important;border:0!important;border-radius:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;-webkit-text-stroke:1.25px #f4f7ff!important}
 header h1 span:not(#nbaAdminSecretTrigger).p23-brand-mark{background:rgba(19,27,36,.4)!important;border:1px solid rgba(244,210,145,.35)!important;color:#f8e7bd!important}
 </style>
-
-
-<style id="p23-smoke-intro-style">
-  #p23-smoke-intro{
-    position:fixed;inset:0;z-index:2147483647;pointer-events:none;
-    overflow:hidden;opacity:1;background:rgba(0,2,8,.50);
-    animation:p23SmokeScreenOut 6.4s cubic-bezier(.18,.62,.22,1) forwards;
-    will-change:opacity,background;
-  }
-  #p23-smoke-intro canvas{display:block;width:100%;height:100%}
-  #p23-smoke-intro .p23-smoke-flash{
-    position:absolute;inset:-15%;pointer-events:none;
-    background:radial-gradient(ellipse at 50% 48%,
-      rgba(255,255,255,.56) 0%,rgba(255,70,85,.30) 22%,
-      rgba(255,255,255,.12) 42%,transparent 68%);
-    opacity:0;animation:p23SmokeFlash 6.2s ease-out forwards;
-  }
-  @keyframes p23SmokeScreenOut{
-    0%{opacity:1;background:rgba(0,2,8,.50)}
-    12%{opacity:1;background:rgba(0,2,8,.36)}
-    52%{opacity:.94;background:rgba(0,2,8,.20)}
-    76%{opacity:.58;background:rgba(0,2,8,.09)}
-    91%{opacity:.20;background:rgba(0,2,8,.025)}
-    100%{opacity:0;background:transparent;visibility:hidden}
-  }
-  @keyframes p23SmokeFlash{
-    0%,100%{opacity:0}
-    14%{opacity:.9}
-    30%{opacity:.48}
-    58%{opacity:.15}
-  }
-  @media(prefers-reduced-motion:reduce){
-    #p23-smoke-intro{animation-duration:2s}
-    #p23-smoke-intro .p23-smoke-flash{animation-duration:2s}
-  }
-</style>
-
 <style id="nba-vip-auth-styles">
 #nbaVipAccess{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(8,19,32,.92));border:1px solid rgba(212,177,105,.42);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 12px 30px rgba(0,0,0,.25)}
 #nbaVipAccess input{background:rgba(3,9,17,.72);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:9px;padding:10px 12px;width:100%;font-size:13px;outline:none}
@@ -3376,6 +3339,30 @@ header h1 span:not(#nbaAdminSecretTrigger).p23-brand-mark{background:rgba(19,27,
 .nba-vip-lock-overlay{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px;background:linear-gradient(145deg,rgba(3,8,15,.58),rgba(3,8,15,.78));backdrop-filter:blur(2px)}
 .nba-vip-lock-overlay>div{max-width:270px;border:1px solid rgba(222,190,125,.5);border-radius:13px;padding:13px 18px;background:linear-gradient(145deg,rgba(25,33,43,.94),rgba(7,13,22,.96));box-shadow:0 8px 25px rgba(0,0,0,.45)}
 @media(max-width:640px){#nbaVipAccess{padding:13px!important}#nbaVipAccess .nba-vip-actions{display:grid;grid-template-columns:1fr 1fr}}
+</style>
+
+
+<style id="p23-casino-compact-v2">
+#nbaCasinoOdds{max-width:1080px!important;margin:7px auto 12px!important;padding:0 12px!important}
+#nbaCasinoOdds .casino-heading{font-size:10px!important;margin-bottom:7px!important;letter-spacing:.15em!important}
+#nbaCasinoOdds .casino-grid{gap:9px!important}
+#nbaCasinoOdds .casino-card{padding:9px 10px 8px!important;border-radius:13px!important;backdrop-filter:blur(6px) saturate(1.2)!important;-webkit-backdrop-filter:blur(6px) saturate(1.2)!important}
+#nbaCasinoOdds .casino-top{margin-bottom:5px!important}
+#nbaCasinoOdds .casino-logo-img{max-height:28px!important;max-width:94px!important}
+#nbaCasinoOdds .casino-age{font-size:7px!important;padding:2px 5px!important}
+#nbaCasinoOdds .casino-promo{min-height:0!important;margin:4px 0 6px!important;padding:6px 8px!important;border-radius:8px!important}
+#nbaCasinoOdds .casino-clean-kicker{font-size:6px!important;letter-spacing:.08em!important}
+#nbaCasinoOdds .casino-clean-bonus{font-size:clamp(18px,2vw,27px)!important;line-height:1!important;margin:2px 0!important}
+#nbaCasinoOdds .casino-clean-detail{font-size:7px!important;line-height:1.2!important}
+#nbaCasinoOdds .casino-odds-title{font-size:7px!important;margin-bottom:4px!important}
+#nbaCasinoOdds .casino-odds{gap:4px!important}
+#nbaCasinoOdds .casino-odd{padding:4px 2px!important;border-radius:6px!important}
+#nbaCasinoOdds .casino-odd small{font-size:6px!important;margin-bottom:2px!important}
+#nbaCasinoOdds .casino-odd strong{font-size:clamp(13px,1.4vw,16px)!important;line-height:1!important}
+#nbaCasinoOdds .casino-cta{margin-top:6px!important;padding:5px 6px!important;font-size:7px!important;letter-spacing:.06em!important}
+#nbaCasinoOdds .casino-note{font-size:7px!important;margin-top:4px!important}
+@media(max-width:760px){#nbaCasinoOdds .casino-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important}#nbaCasinoOdds .casino-card{padding:7px 5px!important}#nbaCasinoOdds .casino-clean-bonus{font-size:17px!important}#nbaCasinoOdds .casino-clean-detail{font-size:6px!important}#nbaCasinoOdds .casino-odd strong{font-size:12px!important}#nbaCasinoOdds .casino-cta{font-size:6px!important;letter-spacing:0!important;padding:5px 2px!important}}
+@media(max-width:430px){#nbaCasinoOdds{padding:0 7px!important}#nbaCasinoOdds .casino-grid{gap:4px!important}#nbaCasinoOdds .casino-card{padding:6px 4px!important}#nbaCasinoOdds .casino-logo-img{max-width:72px!important;max-height:23px!important}#nbaCasinoOdds .casino-clean-bonus{font-size:14px!important}#nbaCasinoOdds .casino-odd small{font-size:5px!important}#nbaCasinoOdds .casino-odd strong{font-size:11px!important}}
 </style>
 
 </head>
@@ -3432,6 +3419,16 @@ header h1 span:not(#nbaAdminSecretTrigger).p23-brand-mark{background:rgba(19,27,
                         <div class="flex gap-2"><button type="button" data-save-slot="1" class="text-xs px-3 py-2 rounded-lg flex-1">Publicar / reemplazar</button><button type="button" data-delete-slot="1" class="text-xs px-3 py-2 rounded-lg border border-gray-600">Quitar</button></div>
                     </div>
 
+                </div>
+
+                <div id="nbaCasinoAdmin" class="hidden mt-4 rounded-xl border border-amber-300/20 bg-gray-900/60 p-4 space-y-3">
+                    <div><h4 class="text-sm font-bold text-amber-200">Cuotas de los casinos · partido destacado</h4><p class="text-xs text-gray-300">Actualiza local, visitante y total para las tres casas. Los cambios se publican para todos.</p></div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div class="rounded-lg border border-purple-300/30 bg-white/5 p-3 space-y-2"><strong class="text-xs text-purple-200">HARD ROCK BET</strong><label class="block text-[10px] text-gray-200">Local</label><input id="casinoHardrockLocal" class="w-full text-xs p-2" placeholder="-250"><label class="block text-[10px] text-gray-200">Visitante</label><input id="casinoHardrockAway" class="w-full text-xs p-2" placeholder="+210"><label class="block text-[10px] text-gray-200">Total pts</label><input id="casinoHardrockTotal" class="w-full text-xs p-2" placeholder="235"></div>
+                      <div class="rounded-lg border border-rose-300/30 bg-white/5 p-3 space-y-2"><strong class="text-xs text-rose-200">WINPOT</strong><label class="block text-[10px] text-gray-200">Local</label><input id="casinoWinpotLocal" class="w-full text-xs p-2" placeholder="-260"><label class="block text-[10px] text-gray-200">Visitante</label><input id="casinoWinpotAway" class="w-full text-xs p-2" placeholder="+205"><label class="block text-[10px] text-gray-200">Total pts</label><input id="casinoWinpotTotal" class="w-full text-xs p-2" placeholder="235"></div>
+                      <div class="rounded-lg border border-amber-300/30 bg-white/5 p-3 space-y-2"><strong class="text-xs text-amber-200">WINNER</strong><label class="block text-[10px] text-gray-200">Local</label><input id="casinoWinnerLocal" class="w-full text-xs p-2" placeholder="-263"><label class="block text-[10px] text-gray-200">Visitante</label><input id="casinoWinnerAway" class="w-full text-xs p-2" placeholder="+215"><label class="block text-[10px] text-gray-200">Total pts</label><input id="casinoWinnerTotal" class="w-full text-xs p-2" placeholder="235.5"></div>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3"><button type="button" id="nbaSaveCasinoOdds" class="text-xs px-4 py-2 rounded-lg bg-emerald-600 text-white font-bold">Guardar y publicar cuotas</button><span id="nbaCasinoAdminStatus" class="text-xs text-gray-300">Cargando cuotas guardadas…</span></div>
                 </div>
                 <div id="nbaStatsAdmin" class="hidden mt-4 rounded-xl border border-emerald-400/20 bg-gray-900/60 p-4 space-y-3">
                     <div class="flex flex-wrap items-center justify-between gap-2">
@@ -3549,11 +3546,11 @@ header h1 span:not(#nbaAdminSecretTrigger).p23-brand-mark{background:rgba(19,27,
                         return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
                       }
 
-                      (function renderPosesion23Casinos(){
+                      window.renderPosesion23Casinos = function renderPosesion23Casinos(casinoData = POSESION23_CASINOS){
                         const grid = document.getElementById('nbaCasinoOddsGrid');
                         if (!grid) return;
                         const safe = value => String(value ?? '—').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-                        grid.innerHTML = POSESION23_CASINOS.slice(0,3).map(c => `
+                        grid.innerHTML = casinoData.slice(0,3).map(c => `
                           <a class="casino-card ${safe(c.id)}" href="${safe(c.url)}" target="_blank" rel="noopener noreferrer sponsored"
                              aria-label="Abrir ${safe(c.name)} y consultar promoción y cuotas">
                             <div class="casino-top">
@@ -3576,7 +3573,8 @@ header h1 span:not(#nbaAdminSecretTrigger).p23-brand-mark{background:rgba(19,27,
                             </div>
                             <span class="casino-cta">${safe(c.cta)} <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></span>
                           </a>`).join('');
-                      })();
+                      };
+                      window.renderPosesion23Casinos();
     </script>
 
     <!-- Main Container -->
@@ -3831,6 +3829,9 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
                                     SUPABASE_ANON_KEY !== 'PEGA_AQUI_TU_SUPABASE_ANON_KEY';
                                 const supabaseClient = supabaseReady ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
+
+                                // Cuotas públicas: se leen de Supabase para que los cambios del panel se vean en todos los dispositivos.
+                                (async()=>{try{const {data,error}=await supabaseClient.from('nba_casino_odds').select('odds').eq('id',1).maybeSingle();if(!error&&data?.odds&&window.renderPosesion23Casinos){const merged=POSESION23_CASINOS.map(c=>({...c,...(data.odds[c.id]||{})}));window.renderPosesion23Casinos(merged);}}catch(e){console.warn('No se pudieron cargar cuotas de casinos',e);}})();
                                 const NBA_FEATURED_TABLE = 'nba_featured_matches';
                                 const NBA_ADMIN_EMAIL = '7games.galaxy@gmail.com';
                                 let nbaFeaturedRows = [];
@@ -3920,11 +3921,47 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
                                     document.getElementById('nbaAdminLogin').classList.toggle('hidden', logged);
                                     document.getElementById('nbaAdminForms').classList.toggle('hidden', !logged);
                                     document.getElementById('nbaStatsAdmin').classList.toggle('hidden', !logged);
+                                    document.getElementById('nbaCasinoAdmin').classList.toggle('hidden', !logged);
                                     document.getElementById('nbaAdminLogout').classList.toggle('hidden', !logged);
                                     if (session && !logged) setNbaAdminStatus('Esta cuenta no tiene permiso para administrar. Cierra sesión e ingresa con el correo autorizado.');
-                                    else if (logged) { setNbaAdminStatus('Sesión autorizada: ' + NBA_ADMIN_EMAIL); fillNbaAdminTeamSelects(); populateNbaAdminForms(); initNbaStatsAdmin(); }
+                                    else if (logged) { setNbaAdminStatus('Sesión autorizada: ' + NBA_ADMIN_EMAIL); fillNbaAdminTeamSelects(); populateNbaAdminForms(); initNbaStatsAdmin(); initNbaCasinoAdmin(); }
                                     else setNbaAdminStatus('Acceso exclusivo del administrador.');
                                 }
+                                const NBA_CASINO_ODDS_TABLE = 'nba_casino_odds';
+                                const NBA_CASINO_DEFAULTS = {
+                                  hardrock:{local:'-258',visitante:'+210',total:'235'},
+                                  winpot:{local:'-260',visitante:'+205',total:'235'},
+                                  winner:{local:'-263',visitante:'+215',total:'235.5'}
+                                };
+                                function setNbaCasinoStatus(message,error=false){const el=document.getElementById('nbaCasinoAdminStatus');if(el){el.textContent=message;el.className='text-xs '+(error?'text-rose-300':'text-gray-300');}}
+                                function applyNbaCasinoOdds(values){
+                                  const data={...NBA_CASINO_DEFAULTS,...(values||{})};
+                                  const fields={hardrock:['casinoHardrockLocal','casinoHardrockAway','casinoHardrockTotal'],winpot:['casinoWinpotLocal','casinoWinpotAway','casinoWinpotTotal'],winner:['casinoWinnerLocal','casinoWinnerAway','casinoWinnerTotal']};
+                                  Object.entries(fields).forEach(([key,ids])=>{const v=data[key]||NBA_CASINO_DEFAULTS[key];ids.forEach((id,index)=>{const el=document.getElementById(id);if(el)el.value=[v.local,v.visitante,v.total][index]??'';});});
+                                  if(window.renderPosesion23Casinos){const updated=POSESION23_CASINOS.map(c=>({...c,...(data[c.id]||{})}));window.renderPosesion23Casinos(updated);}
+                                }
+                                async function loadNbaCasinoOdds(){
+                                  const {data,error}=await supabaseClient.from(NBA_CASINO_ODDS_TABLE).select('odds').eq('id',1).maybeSingle();
+                                  if(error){applyNbaCasinoOdds(NBA_CASINO_DEFAULTS);setNbaCasinoStatus('No se pudieron leer las cuotas guardadas: '+error.message,true);return;}
+                                  applyNbaCasinoOdds(data?.odds||NBA_CASINO_DEFAULTS);
+                                  setNbaCasinoStatus(data?.odds?'Cuotas cargadas desde Supabase.':'Aún no hay cambios guardados; se muestran las cuotas iniciales.');
+                                }
+                                async function saveNbaCasinoOdds(){
+                                  const val=id=>document.getElementById(id).value.trim()||'—';
+                                  const odds={
+                                    hardrock:{local:val('casinoHardrockLocal'),visitante:val('casinoHardrockAway'),total:val('casinoHardrockTotal')},
+                                    winpot:{local:val('casinoWinpotLocal'),visitante:val('casinoWinpotAway'),total:val('casinoWinpotTotal')},
+                                    winner:{local:val('casinoWinnerLocal'),visitante:val('casinoWinnerAway'),total:val('casinoWinnerTotal')}
+                                  };
+                                  const btn=document.getElementById('nbaSaveCasinoOdds');btn.disabled=true;setNbaCasinoStatus('Guardando cuotas…');
+                                  const {error}=await supabaseClient.from(NBA_CASINO_ODDS_TABLE).upsert({id:1,odds,updated_at:new Date().toISOString()},{onConflict:'id'});
+                                  btn.disabled=false;
+                                  if(error){setNbaCasinoStatus('No se pudieron guardar: '+error.message,true);return;}
+                                  applyNbaCasinoOdds(odds);setNbaCasinoStatus('¡Cuotas publicadas! Ya se muestran para todos los visitantes.');
+                                }
+                                let nbaCasinoAdminInitialized=false;
+                                function initNbaCasinoAdmin(){if(nbaCasinoAdminInitialized)return;nbaCasinoAdminInitialized=true;document.getElementById('nbaSaveCasinoOdds').addEventListener('click',saveNbaCasinoOdds);loadNbaCasinoOdds();}
+
                                 const NBA_FEATURED_DRAFT_KEY = 'nba_featured_match_draft_v1';
                                 function getNbaFeaturedDraft() {
                                     try { return JSON.parse(localStorage.getItem(NBA_FEATURED_DRAFT_KEY) || 'null'); }
@@ -4531,125 +4568,6 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
 </script>
-
-<script id="p23-smoke-intro-script">
-(function(){
-  const KEY='p23_smoke_launch_until_v3';
-  const DAYS=3;
-  let until=0;
-  try{
-    until=Number(localStorage.getItem(KEY)||0);
-    if(!until || Date.now()>until){
-      until=Date.now()+DAYS*24*60*60*1000;
-      localStorage.setItem(KEY,String(until));
-    }
-  }catch(e){until=Date.now()+DAYS*24*60*60*1000;}
-  if(Date.now()>until)return;
-
-  function start(){
-    if(!document.body || document.getElementById('p23-smoke-intro'))return;
-    const layer=document.createElement('div');
-    layer.id='p23-smoke-intro';
-    layer.setAttribute('aria-hidden','true');
-    layer.innerHTML='<canvas></canvas><div class="p23-smoke-flash"></div>';
-    document.body.appendChild(layer);
-    const canvas=layer.querySelector('canvas');
-    const ctx=canvas.getContext('2d',{alpha:true});
-    let w=0,h=0,dpr=1,raf=0,frame=0;
-    const puffs=[];
-    const rand=(a,b)=>a+Math.random()*(b-a);
-    function resize(){
-      dpr=Math.min(window.devicePixelRatio||1,1.5);
-      w=window.innerWidth;h=window.innerHeight;
-      canvas.width=Math.floor(w*dpr);canvas.height=Math.floor(h*dpr);
-      ctx.setTransform(dpr,0,0,dpr,0,0);
-    }
-    function addPuff(x,y,scale,red,delay){
-      puffs.push({
-        x,y,vx:rand(-1.05,1.05),vy:rand(-1.65,-.25),
-        r:scale,age:-delay,life:rand(275,355),
-        alpha:red?rand(.43,.66):rand(.48,.72),
-        red,wobble:rand(0,Math.PI*2),spin:rand(.008,.025)
-      });
-    }
-    function seed(){
-      puffs.length=0;
-      const count=Math.max(155,Math.min(245,Math.round(w/5)));
-      for(let i=0;i<count;i++){
-        const lane=Math.random();
-        let x,y;
-        if(lane<.39){x=rand(-w*.16,w*.27);y=rand(h*.22,h*1.12);}
-        else if(lane<.78){x=rand(w*.73,w*1.16);y=rand(h*.20,h*1.12);}
-        else{x=rand(-w*.12,w*1.12);y=rand(h*.78,h*1.18);}
-        const red=Math.random()<.30;
-        addPuff(x,y,rand(w*.055,w*.145),red,rand(0,42));
-      }
-      // Larger overlapping billows create a continuous, unmistakable smoke wall.
-      for(let i=0;i<18;i++){
-        const side=i%2===0;
-        const x=side?rand(-w*.10,w*.18):rand(w*.82,w*1.10);
-        addPuff(x,rand(h*.30,h*.98),rand(w*.12,w*.21),i%3===0,rand(0,18));
-      }
-    }
-    function smoothstep(a,b,x){
-      const t=Math.max(0,Math.min(1,(x-a)/(b-a)));
-      return t*t*(3-2*t);
-    }
-    function draw(){
-      frame++;
-      ctx.clearRect(0,0,w,h);
-      const progress=frame/360;
-      // Hold the full smoke impact, then let it drift and dissolve slowly.
-      const globalFade=1-smoothstep(.42,1,progress);
-      for(const p of puffs){
-        p.age++;
-        if(p.age<0)continue;
-        const t=p.age/p.life;
-        if(t>=1)continue;
-        p.x+=p.vx+Math.sin(p.wobble+p.age*p.spin)*.58;
-        p.y+=p.vy;
-        p.r+=.19;
-        const lifeFade=1-smoothstep(.66,1,t);
-        const alpha=p.alpha*globalFade*lifeFade;
-        if(alpha<.004)continue;
-        const g=ctx.createRadialGradient(p.x,p.y,p.r*.035,p.x,p.y,p.r);
-        const core=p.red
-          ?`rgba(255,38,58,${alpha})`
-          :`rgba(246,249,252,${alpha})`;
-        const mid=p.red
-          ?`rgba(180,190,205,${alpha*.68})`
-          :`rgba(155,170,184,${alpha*.78})`;
-        g.addColorStop(0,core);
-        g.addColorStop(.34,mid);
-        g.addColorStop(.72,`rgba(100,116,132,${alpha*.34})`);
-        g.addColorStop(1,'rgba(35,48,62,0)');
-        ctx.fillStyle=g;
-        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
-      }
-      if(frame<360){raf=requestAnimationFrame(draw);}
-      else{
-        cancelAnimationFrame(raf);
-        window.removeEventListener('resize',resize);
-        layer.style.transition='opacity 1.2s ease';
-        layer.style.opacity='0';
-        window.setTimeout(()=>layer.remove(),1250);
-      }
-    }
-    resize();seed();
-    window.addEventListener('resize',resize,{passive:true});
-    raf=requestAnimationFrame(draw);
-    // Safety cleanup is delayed beyond the full elegant fade.
-    window.setTimeout(()=>{
-      cancelAnimationFrame(raf);
-      window.removeEventListener('resize',resize);
-      if(layer.isConnected)layer.remove();
-    },7900);
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
-  else start();
-})();
-</script>
-
 <style id="p23-affiliate-pulse-style">
 .p23-affiliate-anchor{position:relative!important;display:inline-flex!important;align-items:center;gap:7px;flex-wrap:wrap;vertical-align:middle}
 .p23-affiliate-pulse{animation:p23ProbabilityPulse .78s cubic-bezier(.2,.85,.25,1) 1}
@@ -4898,6 +4816,44 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
         transition: background-color 9999s ease-out 0s;
       }
     </style>
+
+<style id="nba-readable-text-contrast">
+/* Mejora de legibilidad: conserva fondos, transparencias, bordes y efectos originales. */
+#nbaVipAccess label,
+#nbaVipAccess p:not(#nbaVipMessage):not(#nbaVipUserEmail),
+#nbaVipAccess .text-gray-400,
+#nbaVipAccess .text-gray-300 {
+  color: #f0f5fb !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,.88), 0 0 7px rgba(0,0,0,.42) !important;
+}
+#nbaVipAccess #nbaVipMessage,
+#nbaVipAccess #nbaVipMembershipText {
+  color: #e8f0f8 !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,.9) !important;
+}
+#nbaMainDashboard .text-gray-400,
+#nbaMainDashboard .text-gray-500,
+#nbaMainDashboard .text-gray-600,
+#nbaOuPanel .text-gray-400,
+#nbaOuPanel .text-gray-500,
+#nbaAnalyticsCharts .text-gray-400,
+#nbaAnalyticsCharts .text-gray-500 {
+  color: #dce7f3 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,.82) !important;
+}
+#nbaMainDashboard label,
+#nbaMainDashboard small,
+#nbaOuPanel label,
+#nbaAnalyticsCharts label {
+  text-shadow: 0 1px 3px rgba(0,0,0,.82) !important;
+}
+#nbaMainDashboard .text-white,
+#nbaOuPanel .text-white,
+#nbaAnalyticsCharts .text-white {
+  text-shadow: 0 1px 3px rgba(0,0,0,.72) !important;
+}
+#nbaVipAccess input::placeholder { color: #b8c6d6 !important; opacity: 1 !important; }
+</style>
 </body>
 
 <script async="async" data-cfasync="false" src="https://bauval.org/21/433d3388ed1223fa8b7f649b658e6e55"></script>
