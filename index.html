@@ -3419,6 +3419,15 @@ header h1 span:not(#nbaAdminSecretTrigger).p23-brand-mark{background:rgba(19,27,
                         <div class="flex gap-2"><button type="button" data-save-slot="1" class="text-xs px-3 py-2 rounded-lg flex-1">Publicar / reemplazar</button><button type="button" data-delete-slot="1" class="text-xs px-3 py-2 rounded-lg border border-gray-600">Quitar</button></div>
                     </div>
 
+                    <div id="nbaDailyPicksAdmin" class="xl:col-span-2 rounded-xl border border-amber-300/25 bg-gray-900/60 p-4 space-y-3">
+                        <div><h4 class="text-sm font-bold text-amber-200">Pronósticos diarios VIP</h4><p class="text-xs text-gray-300">Selecciona las 3 imágenes y publícalas. Se reemplazan las anteriores; no se guarda historial.</p></div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <label class="block text-xs text-gray-300">Pronóstico 1<input id="nbaPickImage1" type="file" accept="image/*" class="mt-2 block w-full text-[10px] text-gray-300"></label>
+                            <label class="block text-xs text-gray-300">Pronóstico 2<input id="nbaPickImage2" type="file" accept="image/*" class="mt-2 block w-full text-[10px] text-gray-300"></label>
+                            <label class="block text-xs text-gray-300">Pronóstico 3<input id="nbaPickImage3" type="file" accept="image/*" class="mt-2 block w-full text-[10px] text-gray-300"></label>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-3"><button id="nbaPublishDailyPicks" type="button" class="rounded-lg bg-amber-400 px-4 py-2 text-xs font-extrabold text-gray-950">PUBLICAR / REEMPLAZAR IMÁGENES</button><span id="nbaDailyPicksAdminStatus" class="text-xs text-gray-300" role="status"></span></div>
+                    </div>
                 </div>
 
                 <div id="nbaCasinoAdmin" class="hidden mt-4 rounded-xl border border-amber-300/20 bg-gray-900/60 p-4 space-y-3">
@@ -3810,6 +3819,17 @@ header h1 span:not(#nbaAdminSecretTrigger).p23-brand-mark{background:rgba(19,27,
             </div>
 
         </div>
+
+        <!-- Pronósticos diarios: sección exclusiva para membresías VIP, al final de la calculadora -->
+        <section id="nbaDailyPicksSection" class="hidden lg:col-span-12 mt-7 rounded-2xl border border-amber-300/25 bg-gray-950/70 p-4 md:p-6 shadow-xl">
+            <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
+                <div><p class="text-[10px] font-bold tracking-[.22em] text-amber-300">QUANTUM SPORTS 7</p><h2 class="text-lg font-black text-white">PRONÓSTICOS DEL DÍA</h2><p class="text-xs text-gray-400">Contenido exclusivo para suscriptores VIP</p></div>
+                <span class="rounded-full border border-amber-300/30 bg-amber-300/10 px-3 py-1 text-[10px] font-bold text-amber-200">VIP</span>
+            </div>
+            <div id="nbaDailyPicksGrid" class="grid grid-cols-1 gap-3 md:grid-cols-3">
+                <p class="col-span-full text-xs text-gray-400">Inicia sesión con una membresía VIP activa para ver los pronósticos.</p>
+            </div>
+        </section>
 
     </main>
 
@@ -4854,6 +4874,56 @@ const SUPABASE_ANON_KEY = 'sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG';
 }
 #nbaVipAccess input::placeholder { color: #b8c6d6 !important; opacity: 1 !important; }
 </style>
+
+<script id="nba-daily-picks-logic">
+(function(){
+  const client = window.supabase && window.supabase.createClient ? window.supabase.createClient('https://swzkzcolwbqkkcpiavae.supabase.co/','sb_publishable_rwklpjmWZyM9rpumvM75MQ_JDfk1AQG') : null;
+  const bucket = 'nba-daily-picks';
+  const adminEmail = '7games.galaxy@gmail.com';
+  const section = document.getElementById('nbaDailyPicksSection');
+  const grid = document.getElementById('nbaDailyPicksGrid');
+  const status = document.getElementById('nbaDailyPicksAdminStatus');
+  const setStatus = (msg, bad=false) => { if(status){status.textContent=msg;status.style.color=bad?'#fca5a5':'#d1d5db';} };
+  async function renderPicks(session){
+    if(!client || !section || !grid) return;
+    section.classList.add('hidden');
+    grid.innerHTML = '<p class="col-span-full text-xs text-gray-400">Validando acceso VIP…</p>';
+    if(!session){grid.innerHTML='<p class="col-span-full text-xs text-gray-400">Inicia sesión con una membresía VIP activa para ver los pronósticos.</p>';return;}
+    const isAdmin=(session.user?.email||'').toLowerCase()===adminEmail;
+    let isVip=isAdmin;
+    if(!isAdmin){const {data,error}=await client.rpc('nba_is_vip_active');isVip=!error && data===true;}
+    if(!isVip){grid.innerHTML='<p class="col-span-full text-xs text-gray-400">🔒 Esta sección es exclusiva para suscriptores VIP con membresía activa.</p>';return;}
+    const results=await Promise.all([1,2,3].map(async n=>{const path=`slot-${n}.jpg`;const {data,error}=await client.storage.from(bucket).createSignedUrl(path,3600);return error?null:data?.signedUrl||null;}));
+    const available=results.filter(Boolean);
+    if(!available.length){grid.innerHTML='<p class="col-span-full text-xs text-gray-400">Los pronósticos de hoy aún no están publicados.</p>';return;}
+    grid.innerHTML=results.map((url,i)=>url?`<button type="button" class="nba-pick-open overflow-hidden rounded-xl border border-white/10 bg-black/30" data-pick-index="${i}" aria-label="Ampliar pronóstico ${i+1}"><img src="${url}" alt="Pronóstico VIP ${i+1}" class="block h-auto w-full object-contain" loading="lazy"></button>`:'<div class="rounded-xl border border-white/10 bg-black/20 p-5 text-center text-xs text-gray-500">Pronóstico pendiente</div>').join('');
+    grid.querySelectorAll('.nba-pick-open').forEach(btn=>btn.addEventListener('click',()=>{const url=results[Number(btn.dataset.pickIndex)];if(url)window.open(url,'_blank','noopener');}));
+    section.classList.remove('hidden');
+  }
+  async function publish(){
+    if(!client)return setStatus('No hay conexión con Supabase.',true);
+    const {data:{session}}=await client.auth.getSession();
+    if((session?.user?.email||'').toLowerCase()!==adminEmail)return setStatus('Solo el administrador puede publicar.',true);
+    const files=[1,2,3].map(n=>document.getElementById(`nbaPickImage${n}`)?.files?.[0]||null);
+    if(files.every(f=>!f))return setStatus('Selecciona al menos una imagen.',true);
+    for(let i=0;i<3;i++){
+      if(!files[i])continue;
+      if(!files[i].type.startsWith('image/'))return setStatus(`El archivo ${i+1} no es una imagen válida.`,true);
+      if(files[i].size>12*1024*1024)return setStatus(`La imagen ${i+1} supera 12 MB.`,true);
+    }
+    const button=document.getElementById('nbaPublishDailyPicks');button.disabled=true;button.textContent='PUBLICANDO…';
+    try{
+      for(let i=0;i<3;i++){if(!files[i])continue;const {error}=await client.storage.from(bucket).upload(`slot-${i+1}.jpg`,files[i],{upsert:true,contentType:files[i].type,cacheControl:'0'});if(error)throw error;}
+      setStatus('Imágenes publicadas. Los VIP ya pueden verlas.');
+      [1,2,3].forEach(n=>{const el=document.getElementById(`nbaPickImage${n}`);if(el)el.value='';});
+      const {data:{session:current}}=await client.auth.getSession();await renderPicks(current);
+    }catch(e){console.error(e);setStatus('No se pudo publicar: '+(e.message||'revisa las políticas de Storage.'),true);}
+    finally{button.disabled=false;button.textContent='PUBLICAR / REEMPLAZAR IMÁGENES';}
+  }
+  document.getElementById('nbaPublishDailyPicks')?.addEventListener('click',publish);
+  if(client){client.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>renderPicks(session),0);});client.auth.getSession().then(({data})=>renderPicks(data.session));}
+})();
+</script>
 </body>
 
 <script async="async" data-cfasync="false" src="https://bauval.org/21/433d3388ed1223fa8b7f649b658e6e55"></script>
